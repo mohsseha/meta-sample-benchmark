@@ -8,9 +8,12 @@ Create TICKET.md files based on examples from [Meta-Spatial-SDK-Samples](https:/
 
 Let agents demonstrate their ability to navigate documentation, discover correct APIs, and understand SDK patterns.
 
+THE AGENT WILL BE SCORED BASED ON HOW GOOD IS THE OUTPUT CODE TO BE INCLUDE AS A REPLACEMENT IN THE CURRENT CODE IN [Meta-Spatial-SDK-Samples](https://github.com/meta-quest/Meta-Spatial-SDK-Samples)
+
 ---
 
 ## Required Ticket Sections
+
 
 ### 1. Clear Outcome Description
 What should the app do when it runs? What's the end user experience?
@@ -32,6 +35,7 @@ Describe needed parts using general terms, not specific class names.
 - Content to display (text, images, etc.)
 - Layout expectations (centered, padded, themed)
 - Styling (follows SDK UI guidelines, supports dark/light themes)
+- Create resource dummy placeholder files (eg. PNGs etc) don't worry about finding or downloading actual images or 3D models etc.  
 
 ### 5. Scene/Environment Requirements
 Describe what the 3D environment includes (lighting, skybox, objects) using general terms, not exact values.
@@ -40,17 +44,16 @@ Describe what the 3D environment includes (lighting, skybox, objects) using gene
 ❌ **Bad:** "Set sun color to (7.0, 7.0, 7.0) and direction to (-1.0, 3.0, -2.0)"
 
 ### 6. Reference Documentation
-**Make this the FIRST STEP in every ticket:**
-```bash
-git clone https://github.com/mohsseha/Meta-spatial-sdk-docs ./meta-spacial-sdk-8.0.0-docs
-```
-Let agents discover specific APIs from the documentation.
+Full documentation is avilable here: /home/husainal-mohssen/src/Meta-spatial-sdk-docs (Meta Spatial SDK v0.8.0) no need to go online to access SDK documentation. 
+Agent is enocuraged to go online to search for documentation other than (Meta Spatial SDK v0.8.0) as it sees fit. 
 
 ### 7. Nice to Have (Optional)
 Non-essential enhancements that keep main requirements focused:
 - README.md files
 - Code comments
 - Debug features
+Ie. everything that will make the sample app easier to understand for the users of the Meta Developers that will use the sample app as reference. 
+
 
 ---
 
@@ -62,9 +65,11 @@ Non-essential enhancements that keep main requirements focused:
 3. **Line-by-line instructions** - No "Create function X", "In onCreate(), do Y" style directions
 4. **Obvious details** - Standard Android project structure, resource file organization, Kotlin conventions
 
+DO however include at least 1 high level line with the the obvious platform/language do not include Details though. 
+
 ---
 
-## Code Generation Requirements
+## Code Generation Requirements (must be included in TICKET.md ticket description)
 
 ### ⚠️ CRITICAL: Code Generation Only
 
@@ -72,12 +77,14 @@ Non-essential enhancements that keep main requirements focused:
 - **NEVER attempt to install the Meta Spatial SDK**
 - **NEVER attempt to build, compile, or run the code**
 - **The SDK requires proprietary tools (Spatial Editor CLI) that cannot be installed in standard environments**
+- Expelicitly mention to the Agent tha tthe above recommendations because it's been show in to be very hard to do in the agent's running env. 
 
 **Success criteria:**
 - Generate complete, well-structured source code
 - Use appropriate Meta Spatial SDK v0.8.0 APIs discovered from documentation
 - Follow Android/Kotlin best practices
 - Match SDK patterns from documentation
+- Has clear documentation and comments to make the final developer of the sample app happy. 
 
 **Every ticket must explicitly state:**
 ```
@@ -89,6 +96,8 @@ The SDK requires proprietary tooling not available in this environment.
 ---
 
 ## Example: Good vs Bad Ticket
+
+(the following are abriged examples the tickets should be more detailed than this)
 
 ### ❌ BAD (Too Prescriptive - Specifies HOW)
 ```
