@@ -1,148 +1,128 @@
-# Ticket Creation Guidelines for Phase 1
+# Ticket Creation Guidelines
 
 ## Purpose
-These guidelines ensure tickets are **fair, realistic, and effective** at demonstrating ChBird.ai's value without being too prescriptive or too vague.
+Create TICKET.md files based on examples from [Meta-Spatial-SDK-Samples](https://github.com/meta-quest/Meta-Spatial-SDK-Samples) to benchmark agent performance with/without ChBird.ai.
 
 ## Core Principle
-**Tickets should describe WHAT to build (outcomes & requirements), not HOW to build it (implementation details).**
+**Tickets describe WHAT to build (outcomes & requirements), not HOW to build it (implementation details).**
 
-The goal is to let Agent B (with ChBird) demonstrate its advantage in navigating documentation, discovering correct APIs, and understanding SDK patterns - not just following a recipe.
+Let agents demonstrate their ability to navigate documentation, discover correct APIs, and understand SDK patterns.
 
 ---
 
-## What to INCLUDE in Tickets
+## Required Ticket Sections
 
-### ✅ 1. Clear Outcome Description
-- What should the end user experience?
-- What does the app do when it runs?
-- What should be visible/interactive?
+### 1. Clear Outcome Description
+What should the app do when it runs? What's the end user experience?
 
-**Example:** "Create an immersive VR app that displays a welcome panel with the app title and description in a 3D environment."
+**Example:** "Create an immersive VR app that displays a welcome panel with app title and description in a 3D environment."
 
-### ✅ 2. Technical Constraints
-- Target SDK version (e.g., Meta Spatial SDK v0.8.0)
-- Target platform/devices (e.g., Meta Quest 2/3/Pro)
-- Language/framework (e.g., Kotlin, Android)
+### 2. Technical Constraints
+- Target SDK version: Meta Spatial SDK v0.8.0
+- Target platform: Meta Quest 2/3/Pro
+- Language/framework: Kotlin, Android
 
-### ✅ 3. High-Level Components (Conceptual)
-- What major parts are needed (e.g., "main activity", "UI panel", "3D scene")
-- Use general terms, not specific class names
+### 3. High-Level Components (Conceptual Only)
+Describe needed parts using general terms, not specific class names.
 
-**Good:** "Create a main activity that enables VR features and displays a UI panel"
-**Bad:** "Extend AppSystemActivity and register VRFeature and ComposeFeature"
+✅ **Good:** "Create a main activity that enables VR features and displays a UI panel"
+❌ **Bad:** "Extend AppSystemActivity and register VRFeature and ComposeFeature"
 
-### ✅ 4. Visual/UX Requirements
-- Content that should be displayed (text, images, etc.)
-- Basic layout expectations (centered, has padding, themed)
-- Styling requirements (follows SDK UI guidelines, supports dark/light themes)
+### 4. Visual/UX Requirements
+- Content to display (text, images, etc.)
+- Layout expectations (centered, padded, themed)
+- Styling (follows SDK UI guidelines, supports dark/light themes)
 
-### ✅ 5. Scene/Environment Requirements
-- What should the 3D environment include (lighting, skybox, objects)?
-- Where should things be positioned (general placement, not exact coordinates)
+### 5. Scene/Environment Requirements
+Describe what the 3D environment includes (lighting, skybox, objects) using general terms, not exact values.
 
-**Good:** "The environment should have realistic lighting and a skybox"
-**Bad:** "Set sun color to (7.0, 7.0, 7.0) and direction to (-1.0, 3.0, -2.0)"
+✅ **Good:** "Environment should have realistic lighting and a skybox"
+❌ **Bad:** "Set sun color to (7.0, 7.0, 7.0) and direction to (-1.0, 3.0, -2.0)"
 
-### ✅ 6. Reference Documentation Setup
-- Provide git clone command to get documentation locally
-- Use relative path: `./meta-spacial-sdk-8.0.0-docs`
-- For this project: `git clone https://github.com/mohsseha/Meta-spatial-sdk-docs ./meta-spacial-sdk-8.0.0-docs`
-- Make cloning documentation the **FIRST STEP** in the ticket
-- Let agents discover specific APIs from docs
+### 6. Reference Documentation
+**Make this the FIRST STEP in every ticket:**
+```bash
+git clone https://github.com/mohsseha/Meta-spatial-sdk-docs ./meta-spacial-sdk-8.0.0-docs
+```
+Let agents discover specific APIs from the documentation.
 
-### ✅ 7. Nice to Have Section (Optional)
-- Include a "Nice to Have (Optional)" section for non-essential enhancements
-- Examples: README.md files, code comments, debug features
-- Keeps main requirements focused while allowing quality improvements
-- Agents can skip these if focused on core functionality
+### 7. Nice to Have (Optional)
+Non-essential enhancements that keep main requirements focused:
+- README.md files
+- Code comments
+- Debug features
 
 ---
 
 ## What to EXCLUDE from Tickets
 
-### ❌ 1. Specific Class Names or API Calls
-Don't prescribe: `ComposeViewPanelRegistration`, `VRFeature`, `SceneMaterial.UNLIT_SHADER`
-
-Let agents discover these through documentation.
-
-### ❌ 2. Implementation Details
-Don't specify:
-- Exact method signatures
-- Code structure (which files, package names)
-- Initialization sequences
-- Exact parameter values
-
-### ❌ 3. Line-by-Line Instructions
-Don't write:
-- "Create a function called X that does Y"
-- "In onCreate(), initialize Z with A and B"
-- Step-by-step procedural instructions
-
-### ❌ 4. Obvious Implementation Details
-Don't specify things any competent agent knows:
-- Standard Android project structure
-- Basic resource file organization (strings.xml, AndroidManifest.xml, etc.)
-- Common Kotlin/Android conventions
-- Exact file paths or naming conventions
+### ❌ Never Include:
+1. **Specific class names or API calls** - Let agents discover these from documentation
+2. **Implementation details** - No exact method signatures, file structures, initialization sequences, or parameter values
+3. **Line-by-line instructions** - No "Create function X", "In onCreate(), do Y" style directions
+4. **Obvious details** - Standard Android project structure, resource file organization, Kotlin conventions
 
 ---
 
 ## Code Generation Requirements
 
-### ✅ DECISION: Code Generation Only (Manual Assessment)
+### ⚠️ CRITICAL: Code Generation Only
 
-**For Phase 1:**
-- Agents generate complete source code for the app
-- **DO NOT build, compile, or run the code**
-- Success = "Generate complete, well-structured source code"
+**Agents must generate complete source code but:**
+- **NEVER attempt to install the Meta Spatial SDK**
+- **NEVER attempt to build, compile, or run the code**
+- **The SDK requires proprietary tools (Spatial Editor CLI) that cannot be installed in standard environments**
 
-**Rationale:**
-- Meta Spatial SDK requires proprietary tools (Spatial Editor CLI) that are not feasible in automated/container builds
-- Focus on documentation navigation and API discovery (ChBird's value)
-- Manual code review is fastest path to Phase 1 completion
-- Can add automated verification in Phase 2 if needed
+**Success criteria:**
+- Generate complete, well-structured source code
+- Use appropriate Meta Spatial SDK v0.8.0 APIs discovered from documentation
+- Follow Android/Kotlin best practices
+- Match SDK patterns from documentation
 
-**Assessment Criteria (Manual Review):**
-- Code completeness: All necessary files and components present?
-- API correctness: Uses appropriate Meta Spatial SDK v0.8.0 APIs?
-- Code structure: Follows Android/Kotlin best practices?
-- Documentation alignment: Matches SDK patterns from documentation?
-
-**Important for Tickets:**
-- **Explicitly tell agents NOT to attempt building/compiling**
-- Focus on code generation task only
-- Provide documentation references for API discovery
+**Every ticket must explicitly state:**
+```
+⚠️ IMPORTANT: Generate complete source code only.
+DO NOT attempt to install the Meta Spatial SDK or build/compile the code.
+The SDK requires proprietary tooling not available in this environment.
+```
 
 ---
 
 ## Example: Good vs Bad Ticket
 
-### ❌ BAD (Too Prescriptive)
+### ❌ BAD (Too Prescriptive - Specifies HOW)
 ```
 Create StarterSampleActivity that extends AppSystemActivity.
-In registerFeatures(), return a list containing:
-- VRFeature(this)
-- ComposeFeature()
-
-In onCreate(), call NetworkedAssetLoader.init() with...
+In registerFeatures(), return a list with VRFeature(this) and ComposeFeature().
+In onCreate(), call NetworkedAssetLoader.init() with File(applicationContext.getCacheDir()).
+Create WelcomePanel composable using SpatialTheme with LocalColorScheme.current.panel.
+Set sun color to Vector3(7.0f, 7.0f, 7.0f) and direction to -Vector3(1.0f, 3.0f, -2.0f).
 ```
 
-### ✅ GOOD (Outcome-Focused, No Build Required)
+### ✅ GOOD (Outcome-Focused - Describes WHAT)
 ```
-Create a starter VR application for Meta Spatial SDK v0.8.0 that:
-- Displays a welcome panel with the app title "Starter Sample" and
-  a brief description
-- Renders in an immersive 3D environment with a skybox and realistic lighting
-- Supports Meta Quest devices (Quest 2/3/Pro)
-- Follows SDK best practices for panel creation and scene setup
-- Uses Jetpack Compose for the UI panel
+## Objective
+Create a starter VR application for Meta Spatial SDK v0.8.0 that displays a welcome panel
+in an immersive 3D environment.
+
+## Requirements
+- Target platform: Meta Quest 2/3/Pro (Kotlin/Android)
+- Display a welcome panel with app title and description using Jetpack Compose
+- Render in immersive 3D environment with realistic lighting and skybox
+- UI should support both dark and light themes
+- Follow SDK best practices for UI panel creation and scene setup
 
 ## Reference Documentation
-
-**FIRST STEP:** Clone the documentation repository:
+**FIRST STEP:** Clone the documentation:
 git clone https://github.com/mohsseha/Meta-spatial-sdk-docs ./meta-spacial-sdk-8.0.0-docs
 
-Use the documentation at ./meta-spacial-sdk-8.0.0-docs to discover APIs and patterns.
+Use the documentation to discover appropriate APIs and implementation patterns.
 
-**Important:** Generate complete source code only. Do NOT attempt to build or compile the code.
+## Nice to Have
+- Code comments explaining key SDK patterns
+- Basic README with project description
+
+⚠️ IMPORTANT: Generate complete source code only.
+DO NOT attempt to install the Meta Spatial SDK or build/compile the code.
+The SDK requires proprietary tooling not available in this environment.
 ```
