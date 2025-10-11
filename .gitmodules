@@ -1,0 +1,3 @@
+[submodule "Meta-Spatial-SDK-Samples"]
+	path = Meta-Spatial-SDK-Samples
+	url = https://github.com/meta-quest/Meta-Spatial-SDK-Samples
