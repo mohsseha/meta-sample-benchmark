@@ -1,0 +1,142 @@
+
+{
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "Button",
+      "mesh": 0,
+      "extensions": {
+        "META_spatial_physics": {
+          "shape": "box",
+          "mass": 1,
+          "friction": 0.5,
+          "restitution": 0.5
+        },
+        "META_spatial_components": {
+          "Button": {}
+        }
+      }
+    },
+    {
+      "name": "Trigger",
+      "mesh": 1,
+      "extensions": {
+        "META_spatial_physics": {
+          "shape": "box",
+          "mass": 1,
+          "friction": 0.5,
+          "restitution": 0.5,
+          "constraints": [
+            {
+              "type": "dof",
+              "linear_lower_limit": [0, 0, 0],
+              "linear_upper_limit": [0, 0, 0.1]
+            }
+          ]
+        },
+        "META_spatial_components": {
+          "Trigger": {
+            "maxDistance": 0.1
+          }
+        }
+      }
+    },
+    {
+      "name": "Spinner",
+      "mesh": 2,
+      "extensions": {
+        "META_spatial_physics": {
+          "shape": "cylinder",
+          "mass": 5,
+          "friction": 0.5,
+          "restitution": 0.5
+        },
+        "META_spatial_components": {
+          "Spinner": {
+            "speed": 10
+          }
+        }
+      }
+    },
+    {
+      "name": "Ground",
+      "mesh": 3,
+      "extensions": {
+        "META_spatial_physics": {
+          "shape": "box",
+          "mass": 0
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 1
+          },
+          "indices": 0
+        }
+      ]
+    },
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 3
+          },
+          "indices": 2
+        }
+      ]
+    },
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 5
+          },
+          "indices": 4
+        }
+      ]
+    },
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 7
+          },
+          "indices": 6
+        }
+      ]
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "button.gltf",
+      "byteLength": 0
+    },
+    {
+      "uri": "trigger.gltf",
+      "byteLength": 0
+    },
+    {
+      "uri": "spinner.gltf",
+      "byteLength": 0
+    },
+    {
+      "uri": "ground.gltf",
+      "byteLength": 0
+    }
+  ]
+}

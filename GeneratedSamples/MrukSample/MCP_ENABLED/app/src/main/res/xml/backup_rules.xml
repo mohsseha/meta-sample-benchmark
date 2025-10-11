@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- TODO Remove the following "include" and "exclude" elements - they are
+         here to illustrate the syntax.  See
+         https://developer.android.com/guide/topics/data/autobackup
+         for details.
+    <include domain="file" path="."/>
+    <exclude domain="file" path="device_specific.data"/>
+    -->
+</full-backup-content>
