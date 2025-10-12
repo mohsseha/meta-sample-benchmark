@@ -145,4 +145,14 @@ Produce a single JSON object with the following structure and write it to `gradi
     "...": "..."
   }
 }
-```
+
+
+
+YOU MUST FOLLOW THIS INSTRUCTION EXACTLY.
+
+
+After your complete analysis, your only final action is to use your tool that can write files to create a file named grading_results.json in your current working directory.
+The file's content must be only the single, valid JSON object described in the "Final Output Format" section.
+Do not output the JSON to standard output.
+Do not add any other text, explanation, or markdown formatting to the file.
+
