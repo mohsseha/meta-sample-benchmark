@@ -1,0 +1,13 @@
+[versions]
+spatialsdk = "0.8.0"
+kotlin = "2.1.0"
+androidGradlePlugin = "8.2.0"
+
+[libraries]
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+spatial-sdk = { module = "com.meta.spatial:spatial-sdk", version.ref = "spatialsdk" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+meta-spatial-plugin = { id = "com.meta.spatial.plugin", version.ref = "spatialsdk" }

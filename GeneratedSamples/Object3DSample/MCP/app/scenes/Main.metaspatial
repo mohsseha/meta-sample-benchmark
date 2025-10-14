@@ -1,0 +1,18 @@
+<scene>
+    <environment>
+        <skybox color="#87CEEB" />
+    </environment>
+    <assets>
+        <asset id="cube" src="models/cube.gltf" />
+        <asset id="sphere" src="models/sphere.gltf" />
+        <asset id="cone" src="models/cone.gltf" />
+    </assets>
+    <entities>
+        <!-- The ground plane -->
+        <entity>
+            <transform position="0 -1 0" scale="10 0.1 10" />
+            <mesh primitive="plane" />
+            <material color="#808080" />
+        </entity>
+    </entities>
+</scene>

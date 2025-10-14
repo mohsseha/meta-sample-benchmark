@@ -1,0 +1,81 @@
+{
+  "asset" : {
+    "version" : "2.0"
+  },
+  "scene" : 0,
+  "scenes" : [
+    {
+      "nodes" : [ 0, 1, 2 ]
+    }
+  ],
+  "nodes" : [
+    {
+      "name" : "Button",
+      "mesh" : 0,
+      "translation" : [ 0, 1, -2 ],
+      "extensions" : {
+        "META_components" : {
+          "components" : [
+            {
+              "name" : "Physics",
+              "properties" : {
+                "mass" : 1,
+                "bounciness" : 0.5,
+                "friction" : 0.5
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name" : "Trigger",
+      "mesh" : 1,
+      "translation" : [ -2, 1, -2 ],
+      "extensions" : {
+        "META_components" : {
+          "components" : [
+            {
+              "name" : "Physics",
+              "properties" : {
+                "mass" : 1,
+                "bounciness" : 0.5,
+                "friction" : 0.5
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name" : "Spinner",
+      "mesh" : 2,
+      "translation" : [ 2, 1, -2 ],
+      "extensions" : {
+        "META_components" : {
+          "components" : [
+            {
+              "name" : "Physics",
+              "properties" : {
+                "mass" : 1,
+                "bounciness" : 0.5,
+                "friction" : 0.5
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "meshes" : [
+    {
+      "uri" : "../models/button.gltf"
+    },
+    {
+      "uri" : "../models/trigger.gltf"
+    },
+    {
+      "uri" : "../models/spinner.gltf"
+    }
+  ]
+}

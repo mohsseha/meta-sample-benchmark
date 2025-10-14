@@ -65,8 +65,8 @@ for sample_path in "${GENERATED_SAMPLES_DIR}"/*; do
     echo "--> Invoking agent. Full log: '${sample_work_dir}/agent_run.log'"
     (
         cd "${sample_work_dir}"
-        # The '&>' redirects both stdout and stderr to the log file.
-        timeout "${AGENT_TIMEOUT}" gemini --prompt "$GRADER_PROMPT" &> agent_run.log
+        # The '2>&1 | tee' captures both stdout and stderr, displaying them on screen and logging to file.
+        timeout "${AGENT_TIMEOUT}" gemini --yolo --prompt "$GRADER_PROMPT" 2>&1 | tee agent_run.log
     ) || true # Continue the loop even if the agent command fails or times out.
 
     # 4. Check for the agent-generated result and archive it.

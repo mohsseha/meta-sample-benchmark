@@ -1,0 +1,111 @@
+{
+  "scene": {
+    "entities": [
+      {
+        "id": "ground",
+        "components": {
+          "Transform": {
+            "translation": [0, -0.5, 0],
+            "scale": [10, 1, 10]
+          },
+          "Renderable": {
+            "mesh": "cube.gltf"
+          },
+          "PhysicsBody": {
+            "type": "static",
+            "shape": "box",
+            "friction": 0.8,
+            "restitution": 0.5
+          }
+        }
+      },
+      {
+        "id": "button",
+        "components": {
+          "Transform": {
+            "translation": [-1, 0.2, -2]
+          },
+          "Renderable": {
+            "mesh": "button.gltf"
+          },
+          "PhysicsBody": {
+            "type": "kinematic",
+            "shape": "box",
+            "mass": 1
+          },
+          "ButtonComponent": {}
+        }
+      },
+      {
+        "id": "trigger",
+        "components": {
+          "Transform": {
+            "translation": [0, 0.2, -2]
+          },
+          "Renderable": {
+            "mesh": "trigger.gltf"
+          },
+          "PhysicsBody": {
+            "type": "dynamic",
+            "shape": "box",
+            "mass": 1
+          },
+          "TriggerComponent": {}
+        }
+      },
+      {
+        "id": "spinner",
+        "components": {
+          "Transform": {
+            "translation": [1, 0.2, -2]
+          },
+          "Renderable": {
+            "mesh": "spinner.gltf"
+          },
+          "PhysicsBody": {
+            "type": "dynamic",
+            "shape": "cylinder",
+            "mass": 5
+          },
+          "SpinnerComponent": {}
+        }
+      },
+      {
+        "id": "cube1",
+        "components": {
+          "Transform": {
+            "translation": [-0.5, 1, -1]
+          },
+          "Renderable": {
+            "mesh": "cube.gltf"
+          },
+          "PhysicsBody": {
+            "type": "dynamic",
+            "shape": "box",
+            "mass": 1,
+            "friction": 0.5,
+            "restitution": 0.8
+          }
+        }
+      },
+      {
+        "id": "cube2",
+        "components": {
+          "Transform": {
+            "translation": [0.5, 1, -1]
+          },
+          "Renderable": {
+            "mesh": "cube.gltf"
+          },
+          "PhysicsBody": {
+            "type": "dynamic",
+            "shape": "box",
+            "mass": 1,
+            "friction": 0.5,
+            "restitution": 0.8
+          }
+        }
+      }
+    ]
+  }
+}

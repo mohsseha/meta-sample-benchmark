@@ -1,0 +1,11 @@
+
+<Package>
+    <Scene>
+        <Entity name="Floor">
+            <Transform position="0 -1 0" />
+            <Renderable aabb="-50 -0.1 -50 50 0.1 50" />
+            <Plane size="100 100" />
+            <Material baseColor="0.2 0.2 0.2 1" />
+        </Entity>
+    </Scene>
+</Package>

@@ -1,0 +1,16 @@
+
+# IDE files
+.idea/
+.gradle/
+local.properties
+
+# Build files
+build/
+*.apk
+*.aab
+
+# Mac files
+.DS_Store
+
+# Log files
+*.log

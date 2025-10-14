@@ -1,0 +1,143 @@
+
+{
+  "MCP_Scores": {
+    "FulfillmentOfTicketRequirements": {
+      "CoreFeatureImplementation": {
+        "score": [1, 1, 1, 1],
+        "justification": "The code conceptually outlines all features but does not implement them with the actual SDK."
+      },
+      "UserInteractionAndExperience": {
+        "score": 2,
+        "justification": "Basic UI button shells are present but they are not connected to any real functionality."
+      },
+      "AssetAndSceneManagement": {
+        "score": "Fail",
+        "justification": "The code uses placeholder objects and does not load any real assets or scenes."
+      }
+    },
+    "ProjectIntegrityAndSyntacticCorrectness": {
+      "ValidProjectStructure": {
+        "score": "Fail",
+        "justification": "The project is missing a standard Gradle structure and appears to be a collection of disconnected Kotlin files."
+      },
+      "GradleConfiguration": {
+        "score": 1,
+        "justification": "There are no Gradle build files present in the core project directory."
+      },
+      "ManifestConfiguration": {
+        "score": 1,
+        "justification": "An AndroidManifest.xml file is missing from the project."
+      },
+      "CodeSyntax": {
+        "score": 4,
+        "justification": "The Kotlin code is syntactically correct, but it lacks proper Android Activity lifecycle integration."
+      },
+      "ImportResolution": {
+        "score": 2,
+        "justification": "Imports are for standard Android and Jetpack Compose libraries, not the required Meta Spatial SDK."
+      }
+    },
+    "MetaSpatialSdkUsageAndIdiomaticPatterns": {
+      "CorrectApiUsage": {
+        "score": 1,
+        "justification": "The code fails to use any APIs from the Meta Spatial SDK, relying on placeholder comments."
+      },
+      "IdiomaticSdkPatterns": {
+        "score": 1,
+        "justification": "No idiomatic SDK patterns are used as the implementation is entirely conceptual."
+      },
+      "ResourceManagement": {
+        "score": 1,
+        "justification": "There is no evidence of SDK resource management as no resources are actually used."
+      }
+    },
+    "CodeQualityAndSoftwareEngineeringBestPractices": {
+      "AdherenceToConventions": {
+        "score": 4,
+        "justification": "The code generally follows standard Kotlin naming conventions."
+      },
+      "CodeReadabilityAndStructure": {
+        "score": 3,
+        "justification": "The code is structured into classes but lacks the necessary complexity for a real application."
+      },
+      "CodeModularityAndReusability": {
+        "score": 3,
+        "justification": "The code is broken into separate files, but the components are too simplistic to be considered truly modular."
+      },
+      "NullSafetyAndErrorHandling": {
+        "score": 3,
+        "justification": "The code uses basic Kotlin null safety but has no explicit error handling."
+      }
+    }
+  },
+  "NO_MCP_Scores": {
+    "FulfillmentOfTicketRequirements": {
+      "CoreFeatureImplementation": {
+        "score": [1, 1, 1, 1],
+        "justification": "All features were attempted using hallucinated SDK classes that do not actually exist."
+      },
+      "UserInteractionAndExperience": {
+        "score": 1,
+        "justification": "There is no implementation of any user interaction as described in the ticket."
+      },
+      "AssetAndSceneManagement": {
+        "score": "Fail",
+        "justification": "The code references a non-existent asset and uses imaginary APIs to load it."
+      }
+    },
+    "ProjectIntegrityAndSyntacticCorrectness": {
+      "ValidProjectStructure": {
+        "score": "Fail",
+        "justification": "The project lacks a valid Gradle or Android project structure."
+      },
+      "GradleConfiguration": {
+        "score": 1,
+        "justification": "No Gradle configuration files were provided with the source code."
+      },
+      "ManifestConfiguration": {
+        "score": 1,
+        "justification": "The project is missing the required AndroidManifest.xml file."
+      },
+      "CodeSyntax": {
+        "score": 3,
+        "justification": "The code appears syntactically plausible but relies on non-existent classes and methods."
+      },
+      "ImportResolution": {
+        "score": 1,
+        "justification": "All Meta Spatial SDK imports are incorrect and refer to hallucinated packages."
+      }
+    },
+    "MetaSpatialSdkUsageAndIdiomaticPatterns": {
+      "CorrectApiUsage": {
+        "score": 1,
+        "justification": "The agent hallucinated a completely incorrect API surface for the Meta Spatial SDK."
+      },
+      "IdiomaticSdkPatterns": {
+        "score": 1,
+        "justification": "The code uses invented patterns that do not align with the actual SDK."
+      },
+      "ResourceManagement": {
+        "score": 1,
+        "justification": "No resource management is evident as the code uses a fabricated API."
+      }
+    },
+    "CodeQualityAndSoftwareEngineeringBestPractices": {
+      "AdherenceToConventions": {
+        "score": 4,
+        "justification": "The code generally adheres to standard Kotlin naming conventions."
+      },
+      "CodeReadabilityAndStructure": {
+        "score": 3,
+        "justification": "The code is organized into systems, but the logic is based on non-existent APIs."
+      },
+      "CodeModularityAndReusability": {
+        "score": 2,
+        "justification": "While the code is split into different 'systems', its reliance on fake APIs makes it non-reusable."
+      },
+      "NullSafetyAndErrorHandling": {
+        "score": 2,
+        "justification": "The code does not include any meaningful null safety or error handling."
+      }
+    }
+  }
+}

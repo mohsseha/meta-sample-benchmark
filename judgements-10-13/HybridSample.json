@@ -1,0 +1,143 @@
+
+{
+  "MCP_Scores": {
+    "FulfillmentOfTicketRequirements": {
+      "CoreFeatureImplementation": {
+        "score": [0, 0, 0],
+        "justification": "The code fails to implement hybrid switching, a shared UI panel, or an immersive scene, relying on hallucinated APIs."
+      },
+      "UserInteractionAndExperience": {
+        "score": 1,
+        "justification": "A button exists but it is connected to non-functional, non-existent SDK logic."
+      },
+      "AssetAndSceneManagement": {
+        "score": "Fail",
+        "justification": "The implementation makes no attempt to load any required 3D scenes or assets."
+      }
+    },
+    "ProjectIntegrityAndSyntacticCorrectness": {
+      "ValidProjectStructure": {
+        "score": "Pass",
+        "justification": "The project correctly follows the standard Android Gradle project structure."
+      },
+      "GradleConfiguration": {
+        "score": 1,
+        "justification": "Gradle files use fictitious dependencies and invalid configuration blocks for the Spatial SDK."
+      },
+      "ManifestConfiguration": {
+        "score": 1,
+        "justification": "The Android manifest is missing all required VR features, permissions, and intent filters for a hybrid app."
+      },
+      "CodeSyntax": {
+        "score": 5,
+        "justification": "The source code is syntactically correct Kotlin, despite its logical flaws."
+      },
+      "ImportResolution": {
+        "score": 1,
+        "justification": "The code attempts to import multiple classes that do not exist in the actual SDK."
+      }
+    },
+    "MetaSpatialSdkUsageAndIdiomaticPatterns": {
+      "CorrectApiUsage": {
+        "score": 1,
+        "justification": "The code uses completely hallucinated classes and methods for all SDK interactions."
+      },
+      "IdiomaticSdkPatterns": {
+        "score": 1,
+        "justification": "The implementation does not follow any of the required idiomatic patterns for creating a hybrid application."
+      },
+      "ResourceManagement": {
+        "score": 1,
+        "justification": "No actual SDK resources are ever created or managed, so there is a complete lack of resource management."
+      }
+    },
+    "CodeQualityAndSoftwareEngineeringBestPractices": {
+      "AdherenceToConventions": {
+        "score": 5,
+        "justification": "The code consistently adheres to standard Kotlin and Android coding conventions."
+      },
+      "CodeReadabilityAndStructure": {
+        "score": 4,
+        "justification": "The code is simple and well-structured, making it easy to read."
+      },
+      "CodeModularityAndReusability": {
+        "score": 3,
+        "justification": "The UI is correctly separated into its own composable function."
+      },
+      "NullSafetyAndErrorHandling": {
+        "score": 3,
+        "justification": "The code is too simple for complex error handling, but it correctly uses Kotlin's null safety."
+      }
+    }
+  },
+  "NO_MCP_Scores": {
+    "FulfillmentOfTicketRequirements": {
+      "CoreFeatureImplementation": {
+        "score": [0, 0, 0],
+        "justification": "The app only toggles a boolean to switch between two composables and does not implement any real hybrid functionality."
+      },
+      "UserInteractionAndExperience": {
+        "score": 1,
+        "justification": "User interaction is limited to a simple button that does not perform the required mode switching."
+      },
+      "AssetAndSceneManagement": {
+        "score": "Fail",
+        "justification": "The code makes no attempt to load or manage any 3D scenes or assets."
+      }
+    },
+    "ProjectIntegrityAndSyntacticCorrectness": {
+      "ValidProjectStructure": {
+        "score": "Pass",
+        "justification": "The project follows the standard Android Gradle directory structure."
+      },
+      "GradleConfiguration": {
+        "score": 1,
+        "justification": "The Gradle configuration relies on a made-up SDK plugin and non-existent dependencies."
+      },
+      "ManifestConfiguration": {
+        "score": 1,
+        "justification": "The manifest is a generic template and lacks all necessary VR-specific configurations."
+      },
+      "CodeSyntax": {
+        "score": 5,
+        "justification": "The Kotlin source code is free of any fundamental syntax errors."
+      },
+      "ImportResolution": {
+        "score": 1,
+        "justification": "Key imports for the Spatial SDK are for classes that do not exist."
+      }
+    },
+    "MetaSpatialSdkUsageAndIdiomaticPatterns": {
+      "CorrectApiUsage": {
+        "score": 1,
+        "justification": "The implementation hallucinates core SDK components like 'SpatialApp' and 'View'."
+      },
+      "IdiomaticSdkPatterns": {
+        "score": 1,
+        "justification": "The approach of switching between composables with a boolean is completely incorrect for this SDK."
+      },
+      "ResourceManagement": {
+        "score": 1,
+        "justification": "No SDK resources are ever initialized, therefore no resource management is performed."
+      }
+    },
+    "CodeQualityAndSoftwareEngineeringBestPractices": {
+      "AdherenceToConventions": {
+        "score": 5,
+        "justification": "The code adheres to standard Kotlin and Android naming and style conventions."
+      },
+      "CodeReadabilityAndStructure": {
+        "score": 4,
+        "justification": "The code is simple, well-structured, and easy to understand."
+      },
+      "CodeModularityAndReusability": {
+        "score": 4,
+        "justification": "The project correctly separates the shared UI into a reusable composable function."
+      },
+      "NullSafetyAndErrorHandling": {
+        "score": 3,
+        "justification": "Null safety is handled correctly for the simple logic presented, but no error handling is present."
+      }
+    }
+  }
+}

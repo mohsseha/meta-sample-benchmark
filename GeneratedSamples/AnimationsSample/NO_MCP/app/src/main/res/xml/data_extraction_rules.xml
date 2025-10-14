@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <!--
+       In this sample, we don't have any content to back up.
+       In a real app, you might want to back up app data.
+       For more information on Data Extraction, see the docs:
+       https://developer.android.com/guide/topics/data/data-extraction
+        -->
+    </cloud-backup>
+</data-extraction-rules>

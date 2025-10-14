@@ -1,0 +1,143 @@
+
+{
+  "MCP_Scores": {
+    "FulfillmentOfTicketRequirements": {
+      "CoreFeatureImplementation": {
+        "score": [1, 1, 1, 2, 1],
+        "justification": "The code attempts all features but lacks correct MRUK integration and procedural mesh generation for physics."
+      },
+      "UserInteractionAndExperience": {
+        "score": 2,
+        "justification": "User interaction for shooting is present but it lacks integration with the physical environment as required."
+      },
+      "AssetAndSceneManagement": {
+        "score": "Fail",
+        "justification": "The code does not load any specified glTF assets, instead creating primitives programmatically."
+      }
+    },
+    "ProjectIntegrityAndSyntacticCorrectness": {
+      "ValidProjectStructure": {
+        "score": "Pass",
+        "justification": "The project follows the standard Android Gradle project structure."
+      },
+      "GradleConfiguration": {
+        "score": 2,
+        "justification": "The Gradle file uses incorrect and outdated dependency names for the Meta Spatial SDK."
+      },
+      "ManifestConfiguration": {
+        "score": 3,
+        "justification": "The manifest is missing several required features for a mixed reality application, such as passthrough."
+      },
+      "CodeSyntax": {
+        "score": 2,
+        "justification": "The code contains numerous syntax and API usage errors that would prevent compilation."
+      },
+      "ImportResolution": {
+        "score": 2,
+        "justification": "Many imported classes do not exist in the specified SDK dependencies, indicating hallucinated APIs."
+      }
+    },
+    "MetaSpatialSdkUsageAndIdiomaticPatterns": {
+      "CorrectApiUsage": {
+        "score": 1,
+        "justification": "The code uses a completely incorrect, non-existent asynchronous API pattern with 'thenAccept' which is not how the SDK works."
+      },
+      "IdiomaticSdkPatterns": {
+        "score": 1,
+        "justification": "The implementation fails to follow any recommended SDK patterns for initialization, feature management, or scene loading."
+      },
+      "ResourceManagement": {
+        "score": 3,
+        "justification": "The code includes basic Android lifecycle methods but lacks specific resource management for SDK components."
+      }
+    },
+    "CodeQualityAndSoftwareEngineeringBestPractices": {
+      "AdherenceToConventions": {
+        "score": 4,
+        "justification": "The code generally adheres to standard Kotlin naming conventions."
+      },
+      "CodeReadabilityAndStructure": {
+        "score": 2,
+        "justification": "All logic is crammed into a single monolithic activity, making it difficult to read and maintain."
+      },
+      "CodeModularityAndReusability": {
+        "score": 2,
+        "justification": "The code uses magic numbers and has duplicated logic for object creation."
+      },
+      "NullSafetyAndErrorHandling": {
+        "score": 2,
+        "justification": "Error handling for permission denial is noted in a comment but not implemented."
+      }
+    }
+  },
+  "NO_MCP_Scores": {
+    "FulfillmentOfTicketRequirements": {
+      "CoreFeatureImplementation": {
+        "score": [1, 2, 2, 2, 1],
+        "justification": "The implementation correctly identifies the need for MRUK, target and basketball spawning, but physics interaction is incomplete."
+      },
+      "UserInteractionAndExperience": {
+        "score": 3,
+        "justification": "The code correctly outlines user interaction for shooting basketballs and placing targets on walls."
+      },
+      "AssetAndSceneManagement": {
+        "score": "Pass",
+        "justification": "The code correctly references loading the basketball and target glTF models as specified."
+      }
+    },
+    "ProjectIntegrityAndSyntacticCorrectness": {
+      "ValidProjectStructure": {
+        "score": "Pass",
+        "justification": "The project follows the standard Android Gradle project structure."
+      },
+      "GradleConfiguration": {
+        "score": 2,
+        "justification": "The Gradle file lists incorrect and non-existent dependency coordinates for the Meta Spatial SDK."
+      },
+      "ManifestConfiguration": {
+        "score": 2,
+        "justification": "The manifest is missing critical permissions and features required for mixed reality and scene access."
+      },
+      "CodeSyntax": {
+        "score": 2,
+        "justification": "The code is plagued by significant syntax errors and calls to non-existent APIs."
+      },
+      "ImportResolution": {
+        "score": 1,
+        "justification": "Almost all imports related to the Meta Spatial SDK are incorrect or refer to hallucinated classes."
+      }
+    },
+    "MetaSpatialSdkUsageAndIdiomaticPatterns": {
+      "CorrectApiUsage": {
+        "score": 1,
+        "justification": "The code uses completely hallucinated classes and methods like 'Mruk(scene)' and 'scene.addCollisionListener'."
+      },
+      "IdiomaticSdkPatterns": {
+        "score": 1,
+        "justification": "The implementation does not follow any correct SDK patterns for initialization, permissions, or event handling."
+      },
+      "ResourceManagement": {
+        "score": 1,
+        "justification": "There is no evidence of proper lifecycle management for SDK resources or Android components."
+      }
+    },
+    "CodeQualityAndSoftwareEngineeringBestPractices": {
+      "AdherenceToConventions": {
+        "score": 5,
+        "justification": "The code consistently adheres to Kotlin and Android coding conventions."
+      },
+      "CodeReadabilityAndStructure": {
+        "score": 5,
+        "justification": "The code is well-structured into logical classes for different responsibilities like spawning and collision."
+      },
+      "CodeModularityAndReusability": {
+        "score": 4,
+        "justification": "The code is well-modularized, though it still contains some magic numbers for physics velocity."
+      },
+      "NullSafetyAndErrorHandling": {
+        "score": 1,
+        "justification": "The code completely lacks any form of null safety or error handling."
+      }
+    }
+  }
+}

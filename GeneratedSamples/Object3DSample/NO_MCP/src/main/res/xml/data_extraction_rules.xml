@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <!--
+       In this sample, we don't have any content to back up.
+       In a real application, you would specify the content to back up here.
+        -->
+    </cloud-backup>
+    <device-transfer>
+        <!--
+       In this sample, we don't have any content to transfer.
+       In a real application, you would specify the content to transfer here.
+        -->
+    </device-transfer>
+</data-extraction-rules>
