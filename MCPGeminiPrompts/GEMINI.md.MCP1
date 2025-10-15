@@ -1,0 +1,43 @@
+# Gemini CLI Configuration
+
+  ## Meta Spatial SDK Documentation Assistant (chbird-server)
+
+  Specialized MCP server for Meta Spatial SDK documentation. Covers 684+ pages including developer guides, API reference (v0.8.0), and tutorials for building mixed reality Android applications.
+
+  ### Available Tool
+
+  **mcp__chbird-server__answer_question**: Query Meta Spatial SDK documentation
+  - Returns: Answer with confidence score, supporting evidence from docs, and caveats
+
+  ### ⚠️ CRITICAL: Zero-Tolerance for API Hallucination
+
+  **If you write code using APIs without verifying them first, your implementation WILL FAIL.**
+
+  Common hallucinations to AVOID:
+  - ❌ `SpatialActivity` (doesn't exist - ask "What's the base class?")
+  - ❌ `scene.getSkybox()` (doesn't exist - ask "How to create skybox?")
+  - ❌ `Panel(width, height)` (wrong - ask "How to register panels?")
+  - ❌ Generic `PanelRegistration(string, string)` (wrong signature)
+
+  ### Required Question Templates
+
+  **At task start, ask these 3-5 questions:**
+  - "What is [core concept from ticket] in Meta Spatial SDK v0.8.0?"
+  - "Show me code example for [key feature]"
+  - "What are the correct imports for [functionality]?"
+
+  **While coding:**
+  - Uncertain about method? → Ask: "Does [ClassName] have method [methodName]?"
+  - Uncertain about class? → Ask: "What is the correct class for [purpose]?"
+
+  ### Verification Strategy
+
+  1. Ask questions BEFORE writing code
+  2. Check confidence scores (aim for >0.8)
+  3. Read source docs if evidence paths provided
+  4. After coding, spot-check 3-5 APIs you used
+
+  ### Server Configuration
+
+  **Local files**: `/home/husainal-mohssen/src/Meta-spatial-sdk-docs/`
+  **Coverage**: 684 pages, API v0.8.0 reference, developer guides
