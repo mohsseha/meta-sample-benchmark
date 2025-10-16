@@ -37,7 +37,7 @@ for dir in */; do
     cd MCP
 
     echo "[MCP] Running gemini in $(pwd)..."
-    timeout 35m gemini --yolo --include-directories . --include-directories "$SDK_DOCS_PATH" --prompt "$GEMINI_PROMPT"
+    timeout 35m gemini --debug --yolo --include-directories . --include-directories "$SDK_DOCS_PATH" --prompt "$GEMINI_PROMPT"
     cd ..
 
     if [ "$MCP_ONLY" -eq 0 ]; then
