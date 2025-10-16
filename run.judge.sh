@@ -8,7 +8,7 @@ readonly GENERATED_SAMPLES_DIR="GeneratedSamples"
 readonly REFERENCE_SAMPLES_DIR="Meta-Spatial-SDK-Samples"
 readonly WORKING_DIR="grader_agent_working_dir"
 readonly JUDGEMENTS_DIR="judgements"
-readonly PROMPT_FILE="GRADER_AGENT_PROMPT.MD"
+readonly PROMPT_FILE="JUDGE_AGENT_PROMPT.md"
 readonly AGENT_TIMEOUT="20m"
 
 # --- Script Health ---
