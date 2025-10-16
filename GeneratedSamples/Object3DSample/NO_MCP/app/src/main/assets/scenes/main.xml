@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scene>
+    <entity>
+        <transform
+            position="0 0 0"
+            rotation="0 0 0"
+            scale="1 1 1" />
+        <light
+            type="directional"
+            color="#FFFFFF"
+            intensity="1.0" />
+    </entity>
+    <entity>
+        <transform
+            position="0 -1.5 0"
+            rotation="0 0 0"
+            scale="1 1 1" />
+        <model
+            src="models/plane.gltf" />
+    </entity>
+</scene>

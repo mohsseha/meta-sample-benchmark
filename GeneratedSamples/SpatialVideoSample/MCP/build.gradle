@@ -1,0 +1,30 @@
+
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    ext.kotlin_version = '1.8.0'
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // NOTE: This is a placeholder for the actual Meta Spatial SDK plugin.
+        // The actual plugin name and version may be different.
+        classpath 'com.meta.spatial:spatial-sdk-gradle-plugin:0.8.0'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        // NOTE: This is a placeholder for the actual Meta Spatial SDK repository.
+        // The actual repository URL may be different.
+        maven { url 'https://maven.pkg.oculus.com/repository/oculus-sdk' }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

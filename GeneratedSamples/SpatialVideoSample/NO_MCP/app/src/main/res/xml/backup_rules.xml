@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!--
+   In this file you can specify which parts of your application's data you want to be backed up.
+   Android's backup service backs up and restores the data of apps installed on a device.
+   This file is used to configure which files are backed up.
+   By default, the service backs up almost all app data.
+   You can use this file to include or exclude specific files or directories.
+   For more information, see the Android documentation on Auto Backup for Apps:
+   https://developer.android.com/guide/topics/data/autobackup
+    -->
+</full-backup-content>

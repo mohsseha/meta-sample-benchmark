@@ -1,0 +1,8 @@
+{
+  "scene": {
+    "skybox": {
+      "type": "skybox",
+      "texture": "textures/skybox.ktx"
+    }
+  }
+}

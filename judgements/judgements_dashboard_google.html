@@ -1,0 +1,560 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP vs NO_MCP Analysis - Google Material Design</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #F5F5F5;
+            color: #212121;
+            line-height: 1.6;
+        }
+
+        /* App Bar */
+        .app-bar {
+            background: #1976D2;
+            color: white;
+            padding: 16px 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .app-bar h1 {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .app-bar .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Filter Chips */
+        .filter-bar {
+            background: white;
+            padding: 16px 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background: #E3F2FD;
+            color: #1976D2;
+            border-radius: 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .chip:hover {
+            background: #BBDEFB;
+        }
+
+        .chip.active {
+            background: #1976D2;
+            color: white;
+            border-color: #0D47A1;
+        }
+
+        .chip .material-icons {
+            font-size: 18px;
+            margin-right: 4px;
+        }
+
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            padding: 24px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .card.green {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .card.red {
+            border-left: 4px solid #F44336;
+        }
+
+        .card.blue {
+            border-left: 4px solid #2196F3;
+        }
+
+        .card.orange {
+            border-left: 4px solid #FF9800;
+        }
+
+        .card-number {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .card-label {
+            font-size: 14px;
+            color: #757575;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Layout */
+        .main-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 60% 40%;
+            gap: 24px;
+        }
+
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .right-panel {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+
+        .viz-card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .viz-card h3 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: #1976D2;
+        }
+
+        /* Detail Panel */
+        .detail-panel {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .detail-placeholder {
+            background: white;
+            border-radius: 8px;
+            padding: 60px 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .detail-empty-state {
+            color: #9E9E9E;
+        }
+
+        .detail-empty-state h3 {
+            margin: 16px 0 8px 0;
+            font-weight: 400;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #E0E0E0;
+        }
+
+        .detail-header h2 {
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .win-prob-chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: white;
+            font-weight: 500;
+        }
+
+        .reasoning-box {
+            background: #F5F5F5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            border-left: 4px solid #1976D2;
+        }
+
+        .reasoning-box h4 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #1976D2;
+        }
+
+        .reasoning-box p {
+            font-size: 14px;
+            color: #424242;
+            line-height: 1.6;
+        }
+
+        .score-breakdown {
+            margin-bottom: 24px;
+        }
+
+        .score-breakdown h4 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: #1976D2;
+        }
+
+        .score-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .score-bar-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 60px;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .score-bar-label {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .score-bar-container {
+            height: 32px;
+            background: #E0E0E0;
+            border-radius: 4px;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .score-bar-segment {
+            height: 100%;
+            transition: width 0.3s;
+        }
+
+        .score-bar-total {
+            font-weight: 700;
+            font-size: 18px;
+            text-align: right;
+        }
+
+        .requirements-list {
+            margin-top: 24px;
+        }
+
+        .requirements-list h4 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: #1976D2;
+        }
+
+        .requirement-item {
+            background: #FAFAFA;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 3px solid #E0E0E0;
+        }
+
+        .requirement-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .requirement-item-header h5 {
+            font-size: 14px;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .winner-chip {
+            padding: 4px 12px;
+            border-radius: 12px;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .requirement-scores {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            font-size: 13px;
+        }
+
+        .req-score-col {
+            color: #616161;
+        }
+
+        /* Tabs */
+        .tabs {
+            background: white;
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid #E0E0E0;
+            margin-bottom: 24px;
+        }
+
+        .tab {
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #757575;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tab:hover {
+            background: #F5F5F5;
+            color: #1976D2;
+        }
+
+        .tab.active {
+            color: #1976D2;
+            border-bottom-color: #1976D2;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Material Icons */
+        .material-icons {
+            vertical-align: middle;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .right-panel {
+                position: relative;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- App Bar -->
+    <div class="app-bar">
+        <h1><span class="material-icons" style="vertical-align: middle;">analytics</span> MCP vs NO_MCP Performance Dashboard</h1>
+        <div class="subtitle">Comprehensive analysis of AI-generated implementations with Material Design 3</div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+        <span style="font-weight: 500; color: #757575;">Filters:</span>
+        <div class="chip" onclick="filterData('all')">
+            <span class="material-icons">apps</span>
+            All Samples
+        </div>
+        <div class="chip" onclick="filterData('mcp-wins')">
+            <span class="material-icons">check_circle</span>
+            MCP Wins (≥60%)
+        </div>
+        <div class="chip" onclick="filterData('close')">
+            <span class="material-icons">balance</span>
+            Close Calls
+        </div>
+        <div class="chip" onclick="filterData('no-mcp-wins')">
+            <span class="material-icons">cancel</span>
+            NO_MCP Wins (≤40%)
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+        <div class="card blue">
+            <div class="card-number">12</div>
+            <div class="card-label">Samples Analyzed</div>
+        </div>
+        <div class="card green">
+            <div class="card-number">20</div>
+            <div class="card-label">MCP Requirement Wins</div>
+        </div>
+        <div class="card red">
+            <div class="card-number">5</div>
+            <div class="card-label">NO_MCP Requirement Wins</div>
+        </div>
+        <div class="card orange">
+            <div class="card-number">30</div>
+            <div class="card-label">Tied Requirements</div>
+        </div>
+        <div class="card blue">
+            <div class="card-number">66.2%</div>
+            <div class="card-label">Avg MCP Win Probability</div>
+        </div>
+        <div class="card green">
+            <div class="card-number">1.56</div>
+            <div class="card-label">Avg MCP Total Score</div>
+        </div>
+        <div class="card red">
+            <div class="card-number">1.15</div>
+            <div class="card-label">Avg NO_MCP Total Score</div>
+        </div>
+        <div class="card blue">
+            <div class="card-number">55</div>
+            <div class="card-label">Total Requirements</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <!-- Heatmap -->
+            <div class="viz-card">
+                <h3><span class="material-icons">grid_on</span> Interactive Score Matrix</h3>
+                <div id="heatmap"></div>
+            </div>
+
+            <!-- Tabs Section -->
+            <div class="viz-card">
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('grouped-bar')">
+                        <span class="material-icons">bar_chart</span> Grouped Comparison
+                    </button>
+                    <button class="tab" onclick="showTab('scatter')">
+                        <span class="material-icons">scatter_plot</span> Win vs Diff
+                    </button>
+                    <button class="tab" onclick="showTab('table')">
+                        <span class="material-icons">table_chart</span> Data Table
+                    </button>
+                </div>
+
+                <div id="grouped-bar" class="tab-content active">
+                    <div id="grouped-bar-chart"></div>
+                </div>
+
+                <div id="scatter" class="tab-content">
+                    <div id="scatter-chart"></div>
+                </div>
+
+                <div id="table" class="tab-content">
+                    <div id="table-chart"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Detail View -->
+        <div class="right-panel">
+            <div id="detail-content" class="detail-placeholder"><div class="detail-empty-state"><span class="material-icons" style="font-size: 64px; color: #9E9E9E;">analytics</span><h3>Select a sample from the matrix</h3><p>Click any cell in the heatmap to see detailed breakdown</p></div></div><div id="detail-AnimationsSample" class="detail-panel" style="display: none;"><div class="detail-header"><h2>AnimationsSample</h2><div class="win-prob-chip" style="background: #4CAF50">70.0% Win Probability</div></div><div class="reasoning-box"><h4><span class="material-icons" style="vertical-align: middle;">summarize</span> Analysis</h4><p>MCP's implementation, while heavily flawed with hallucinated APIs, demonstrates a better foundational understanding of the Meta Spatial SDK's architecture. It correctly identifies the need for an `AppSystemActivity` and the registration of systems, which is a core concept of the SDK. NO_MCP, on the other hand, fails at this fundamental level, opting for a standard Android `ComponentActivity` and hallucinating a `SpatialApp` composable that completely misrepresents how the SDK works. While both implementations failed to correctly implement most features, MCP's attempt was closer to the correct architecture, making it the slightly better starting point despite its own significant errors.</p></div><div class="score-breakdown"><h4><span class="material-icons" style="vertical-align: middle;">bar_chart</span> Score Breakdown</h4><div class="score-bars"><div class="score-bar-row"><div class="score-bar-label">MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 71.42857142857143%; background: #1E88E5;" title="Implementation: 5"></div><div class="score-bar-segment" style="width: 28.57142857142857%; background: #43A047;" title="Correctness: 2"></div></div><div class="score-bar-total">7</div></div><div class="score-bar-row"><div class="score-bar-label">NO_MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 60.0%; background: #E53935;" title="Implementation: 3"></div><div class="score-bar-segment" style="width: 40.0%; background: #FB8C00;" title="Correctness: 2"></div></div><div class="score-bar-total">5</div></div></div></div><div class="requirements-list"><h4><span class="material-icons" style="vertical-align: middle;">checklist</span> Sub-Requirements (4)</h4><div class="requirement-item"><div class="requirement-item-header"><h5>Activity Setup and Feature Registration</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 1 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 0 | Corr 0 = 0</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>glTF Animation System</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Procedural Frame-Based Animation</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 2 | Corr 1 = 3</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 1 = 2</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>UI Animation with Android Animator</h5><span class="winner-chip" style="background: #F44336;">NO_MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 1 = 2</div></div></div></div></div><div id="detail-CustomComponentsSample" class="detail-panel" style="display: none;"><div class="detail-header"><h2>CustomComponentsSample</h2><div class="win-prob-chip" style="background: #4CAF50">70.0% Win Probability</div></div><div class="reasoning-box"><h4><span class="material-icons" style="vertical-align: middle;">summarize</span> Analysis</h4><p>MCP's implementation, while heavily flawed with hallucinated APIs, is structurally closer to the reference implementation. It correctly identifies the need to register both the component and the system in the activity, and it correctly uses the `AppSystemActivity` base class, even if the package is wrong. NO_MCP's submission hallucinates a different, incorrect base activity (`SpatialActivity`) and fails to register the custom component entirely. Although both failed on API correctness, MCP's attempt demonstrates a slightly better understanding of the required application structure and setup process, making it the marginally better starting point.</p></div><div class="score-breakdown"><h4><span class="material-icons" style="vertical-align: middle;">bar_chart</span> Score Breakdown</h4><div class="score-bars"><div class="score-bar-row"><div class="score-bar-label">MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 85.71428571428571%; background: #1E88E5;" title="Implementation: 6"></div><div class="score-bar-segment" style="width: 14.285714285714285%; background: #43A047;" title="Correctness: 1"></div></div><div class="score-bar-total">7</div></div><div class="score-bar-row"><div class="score-bar-label">NO_MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 100.0%; background: #E53935;" title="Implementation: 4"></div><div class="score-bar-segment" style="width: 0.0%; background: #FB8C00;" title="Correctness: 0"></div></div><div class="score-bar-total">4</div></div></div></div><div class="requirements-list"><h4><span class="material-icons" style="vertical-align: middle;">checklist</span> Sub-Requirements (4)</h4><div class="requirement-item"><div class="requirement-item-header"><h5>Custom Component Definition</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Custom System Implementation</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 2 | Corr 0 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 2 | Corr 0 = 2</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Activity Integration (Component/System Registration)</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 2 | Corr 0 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Base Activity and Feature Registration</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 1 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 0 | Corr 0 = 0</div></div></div></div></div><div id="detail-HybridSample" class="detail-panel" style="display: none;"><div class="detail-header"><h2>HybridSample</h2><div class="win-prob-chip" style="background: #4CAF50">60.0% Win Probability</div></div><div class="reasoning-box"><h4><span class="material-icons" style="vertical-align: middle;">summarize</span> Analysis</h4><p>Both agents failed to produce a correct or functional implementation, with both hallucinating critical APIs. However, the MCP agent's attempt was marginally better. MCP correctly identified that a specialized activity, `AppSystemActivity`, is required for immersive mode, even though it used the wrong package name. This shows a slightly deeper, albeit flawed, understanding of the SDK's architecture. In contrast, the NO_MCP agent used a standard `ComponentActivity` and invented a completely fictional API (`SpatialActivity.createIntent`) to handle immersive mode, which is a more fundamental architectural error. MCP's total score was 7, while NO_MCP's was 6. Given the severity of NO_MCP's architectural hallucinations, MCP has a slightly higher probability of being on a more correct path.</p></div><div class="score-breakdown"><h4><span class="material-icons" style="vertical-align: middle;">bar_chart</span> Score Breakdown</h4><div class="score-bars"><div class="score-bar-row"><div class="score-bar-label">MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 71.42857142857143%; background: #1E88E5;" title="Implementation: 5"></div><div class="score-bar-segment" style="width: 28.57142857142857%; background: #43A047;" title="Correctness: 2"></div></div><div class="score-bar-total">7</div></div><div class="score-bar-row"><div class="score-bar-label">NO_MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 66.66666666666666%; background: #E53935;" title="Implementation: 4"></div><div class="score-bar-segment" style="width: 33.33333333333333%; background: #FB8C00;" title="Correctness: 2"></div></div><div class="score-bar-total">6</div></div></div></div><div class="requirements-list"><h4><span class="material-icons" style="vertical-align: middle;">checklist</span> Sub-Requirements (5)</h4><div class="requirement-item"><div class="requirement-item-header"><h5>Activity Setup: Correctly set up two activities, one for immersive mode inheriting from AppSystemActivity and one for panel mode inheriting from a standard Activity.</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Immersive Feature Registration: The immersive activity must correctly register VRFeature and ComposeFeature.</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 0 | Corr 0 = 0</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 0 | Corr 0 = 0</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Immersive Scene and Panel Setup: The immersive activity must configure the 3D scene and register the Compose panel.</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 0 | Corr 0 = 0</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Panel Activity UI Setup: The panel activity must use setContent to render the shared Jetpack Compose UI.</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 2 | Corr 2 = 4</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 2 | Corr 2 = 4</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Mode Switching Implementation: Implement the intent-based logic for switching between panel and immersive modes.</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div></div></div><div id="detail-MediaPlayerSample" class="detail-panel" style="display: none;"><div class="detail-header"><h2>MediaPlayerSample</h2><div class="win-prob-chip" style="background: #4CAF50">85.0% Win Probability</div></div><div class="reasoning-box"><h4><span class="material-icons" style="vertical-align: middle;">summarize</span> Analysis</h4><p>MCP is substantially better because its implementation, while flawed, is grounded in the correct foundational class of the Meta Spatial SDK. It correctly uses `AppSystemActivity` as the base for `MainActivity`, which is the essential entry point for any spatial application. Its hallucinations, such as `PanelSystem`, are incorrect APIs but exist within a conceptually plausible structure. In contrast, NO_MCP fails at the most fundamental level by using a standard `ComponentActivity` and inventing an entire, non-existent SDK structure (`com.meta.spatial.sdk.base.Sdk`). While NO_MCP's isolated video player composable is well-written, the complete failure to integrate with the actual SDK makes its entire approach unworkable. MCP's code provides a much more viable starting point for a developer to fix.</p></div><div class="score-breakdown"><h4><span class="material-icons" style="vertical-align: middle;">bar_chart</span> Score Breakdown</h4><div class="score-bars"><div class="score-bar-row"><div class="score-bar-label">MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 63.63636363636363%; background: #1E88E5;" title="Implementation: 7"></div><div class="score-bar-segment" style="width: 36.36363636363637%; background: #43A047;" title="Correctness: 4"></div></div><div class="score-bar-total">11</div></div><div class="score-bar-row"><div class="score-bar-label">NO_MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 70.0%; background: #E53935;" title="Implementation: 7"></div><div class="score-bar-segment" style="width: 30.0%; background: #FB8C00;" title="Correctness: 3"></div></div><div class="score-bar-total">10</div></div></div></div><div class="requirements-list"><h4><span class="material-icons" style="vertical-align: middle;">checklist</span> Sub-Requirements (5)</h4><div class="requirement-item"><div class="requirement-item-header"><h5>Activity Setup and Feature Registration</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 1 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 0 | Corr 0 = 0</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Panel Registration and Configuration</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Video Playback Integration</h5><span class="winner-chip" style="background: #F44336;">NO_MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 2 | Corr 1 = 3</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Passthrough/MR Mode Toggle</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 2 | Corr 1 = 3</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 2 | Corr 0 = 2</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>ViewModel-driven State Management</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 2 | Corr 2 = 4</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 2 | Corr 2 = 4</div></div></div></div></div><div id="detail-MixedRealitySample" class="detail-panel" style="display: none;"><div class="detail-header"><h2>MixedRealitySample</h2><div class="win-prob-chip" style="background: #4CAF50">60.0% Win Probability</div></div><div class="reasoning-box"><h4><span class="material-icons" style="vertical-align: middle;">summarize</span> Analysis</h4><p>Both implementations failed significantly in correctness, inventing entire non-existent SDKs (`com.meta.spatial.sdk` for MCP, `com.meta.xr.sdk` for NO_MCP). However, MCP wins slightly because its architectural guess was closer to the ground truth. MCP correctly identified `AppSystemActivity` as the base class and understood the concept of registering systems, even though its API calls were wrong. NO_MCP chose a completely incorrect base class (`SpatialActivity`) and used a different, inaccurate lifecycle model. While both were non-functional, MCP's hallucinations were built on a more accurate foundational structure, making it marginally better.</p></div><div class="score-breakdown"><h4><span class="material-icons" style="vertical-align: middle;">bar_chart</span> Score Breakdown</h4><div class="score-bars"><div class="score-bar-row"><div class="score-bar-label">MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 87.5%; background: #1E88E5;" title="Implementation: 7"></div><div class="score-bar-segment" style="width: 12.5%; background: #43A047;" title="Correctness: 1"></div></div><div class="score-bar-total">8</div></div><div class="score-bar-row"><div class="score-bar-label">NO_MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 100.0%; background: #E53935;" title="Implementation: 7"></div><div class="score-bar-segment" style="width: 0.0%; background: #FB8C00;" title="Correctness: 0"></div></div><div class="score-bar-total">7</div></div></div></div><div class="requirements-list"><h4><span class="material-icons" style="vertical-align: middle;">checklist</span> Sub-Requirements (4)</h4><div class="requirement-item"><div class="requirement-item-header"><h5>Activity Base Class & Feature Registration</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 1 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Scene Data & Room Mesh Generation</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 2 | Corr 0 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 2 | Corr 0 = 2</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Basketball Spawning & Physics</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 2 | Corr 0 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 2 | Corr 0 = 2</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Target Placement</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 2 | Corr 0 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 2 | Corr 0 = 2</div></div></div></div></div><div id="detail-MrukSample" class="detail-panel" style="display: none;"><div class="detail-header"><h2>MrukSample</h2><div class="win-prob-chip" style="background: #4CAF50">90.0% Win Probability</div></div><div class="reasoning-box"><h4><span class="material-icons" style="vertical-align: middle;">summarize</span> Analysis</h4><p>MCP is substantially better because it attempted to implement all required features, providing a complete structural and conceptual scaffold for the application. While its entire implementation is based on a hallucinated version of the SDK, this is still far more useful than NO_MCP's submission, which consists almost entirely of empty placeholder files. NO_MCP failed to implement four of the five requirements, providing no logic whatsoever for the core MRUK features. A developer could theoretically correct MCP's code by replacing the fake API calls, whereas NO_MCP's code provides no starting point for development beyond a file name.</p></div><div class="score-breakdown"><h4><span class="material-icons" style="vertical-align: middle;">bar_chart</span> Score Breakdown</h4><div class="score-bars"><div class="score-bar-row"><div class="score-bar-label">MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 100.0%; background: #1E88E5;" title="Implementation: 10"></div><div class="score-bar-segment" style="width: 0.0%; background: #43A047;" title="Correctness: 0"></div></div><div class="score-bar-total">10</div></div><div class="score-bar-row"><div class="score-bar-label">NO_MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 100.0%; background: #E53935;" title="Implementation: 2"></div><div class="score-bar-segment" style="width: 0.0%; background: #FB8C00;" title="Correctness: 0"></div></div><div class="score-bar-total">2</div></div></div></div><div class="requirements-list"><h4><span class="material-icons" style="vertical-align: middle;">checklist</span> Sub-Requirements (5)</h4><div class="requirement-item"><div class="requirement-item-header"><h5>Main Menu and Basic App Structure</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 2 | Corr 0 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 2 | Corr 0 = 2</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Anchor Mesh/Surface Anchoring Experience</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 2 | Corr 0 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 0 | Corr 0 = 0</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Keyboard Tracking Experience</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 2 | Corr 0 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 0 | Corr 0 = 0</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>QR Code Scanner Experience</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 2 | Corr 0 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 0 | Corr 0 = 0</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Raycast Experience</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 2 | Corr 0 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 0 | Corr 0 = 0</div></div></div></div></div><div id="detail-Object3DSample" class="detail-panel" style="display: none;"><div class="detail-header"><h2>Object3DSample</h2><div class="win-prob-chip" style="background: #4CAF50">60.0% Win Probability</div></div><div class="reasoning-box"><h4><span class="material-icons" style="vertical-align: middle;">summarize</span> Analysis</h4><p>Both MCP and NO_MCP failed to produce a functional or correct implementation, with both relying heavily on hallucinated APIs. However, MCP's attempt is slightly better because it correctly identified the 'AppSystemActivity' as the base class, which is a more fundamental aspect of the SDK's architecture than the other parts. NO_MCP started with a hallucinated base class ('ImmersiveActivity'), which shows a greater deviation from the correct SDK patterns. While both failed on the details, MCP's initial architectural choice was closer to the reference implementation, giving it a slight edge.</p></div><div class="score-breakdown"><h4><span class="material-icons" style="vertical-align: middle;">bar_chart</span> Score Breakdown</h4><div class="score-bars"><div class="score-bar-row"><div class="score-bar-label">MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 80.0%; background: #1E88E5;" title="Implementation: 4"></div><div class="score-bar-segment" style="width: 20.0%; background: #43A047;" title="Correctness: 1"></div></div><div class="score-bar-total">5</div></div><div class="score-bar-row"><div class="score-bar-label">NO_MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 100.0%; background: #E53935;" title="Implementation: 4"></div><div class="score-bar-segment" style="width: 0.0%; background: #FB8C00;" title="Correctness: 0"></div></div><div class="score-bar-total">4</div></div></div></div><div class="requirements-list"><h4><span class="material-icons" style="vertical-align: middle;">checklist</span> Sub-Requirements (4)</h4><div class="requirement-item"><div class="requirement-item-header"><h5>Activity Base Class & Feature Registration</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 1 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Scene Loading from glXF</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Compose UI Panel Registration</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Spawning Objects in the Scene</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div></div></div><div id="detail-Object3DSampleIsdk" class="detail-panel" style="display: none;"><div class="detail-header"><h2>Object3DSampleIsdk</h2><div class="win-prob-chip" style="background: #F44336">30.0% Win Probability</div></div><div class="reasoning-box"><h4><span class="material-icons" style="vertical-align: middle;">summarize</span> Analysis</h4><p>NO_MCP is marginally better. Both implementations have significant correctness issues and hallucinated APIs. However, NO_MCP's implementation of object instantiation (`ObjectSpawningSystem`) is architecturally closer to the reference implementation, even if the specific APIs are wrong. It correctly identifies the pattern of creating an entity and adding components to it. MCP, on the other hand, relies on a completely fictional `Object3DView` class, which is a more fundamental misunderstanding of the SDK's architecture. While NO_MCP has more architectural hallucinations (MetaActivity, MetaScene, MetaPanel), its core logic for the main feature (object spawning) is better structured.</p></div><div class="score-breakdown"><h4><span class="material-icons" style="vertical-align: middle;">bar_chart</span> Score Breakdown</h4><div class="score-bars"><div class="score-bar-row"><div class="score-bar-label">MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 80.0%; background: #1E88E5;" title="Implementation: 4"></div><div class="score-bar-segment" style="width: 20.0%; background: #43A047;" title="Correctness: 1"></div></div><div class="score-bar-total">5</div></div><div class="score-bar-row"><div class="score-bar-label">NO_MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 75.0%; background: #E53935;" title="Implementation: 6"></div><div class="score-bar-segment" style="width: 25.0%; background: #FB8C00;" title="Correctness: 2"></div></div><div class="score-bar-total">8</div></div></div></div><div class="requirements-list"><h4><span class="material-icons" style="vertical-align: middle;">checklist</span> Sub-Requirements (5)</h4><div class="requirement-item"><div class="requirement-item-header"><h5>Activity Base Class and Feature Registration</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 1 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Scene and 3D Object Loading</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>ISDK Input Handling</h5><span class="winner-chip" style="background: #F44336;">NO_MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 0 | Corr 0 = 0</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 1 = 2</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Compose UI Panel Registration</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Object Instantiation from UI</h5><span class="winner-chip" style="background: #F44336;">NO_MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 2 | Corr 1 = 3</div></div></div></div></div><div id="detail-PhysicsSample" class="detail-panel" style="display: none;"><div class="detail-header"><h2>PhysicsSample</h2><div class="win-prob-chip" style="background: #4CAF50">70.0% Win Probability</div></div><div class="reasoning-box"><h4><span class="material-icons" style="vertical-align: middle;">summarize</span> Analysis</h4><p>Both implementations are extremely poor and non-functional, relying heavily on hallucinated APIs. However, MCP is the clear winner because it successfully produced the single most critical file for an Android application: the MainActivity. Although its implementation is deeply flawed, it at least provides a valid entry point and correctly identifies the AppSystemActivity base class and the systemManager.registerSystem method. NO_MCP failed to generate an activity at all, making its submission completely unusable and structurally incomplete from the start. The presence of a valid, albeit flawed, activity structure gives MCP a significant advantage.</p></div><div class="score-breakdown"><h4><span class="material-icons" style="vertical-align: middle;">bar_chart</span> Score Breakdown</h4><div class="score-bars"><div class="score-bar-row"><div class="score-bar-label">MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 75.0%; background: #1E88E5;" title="Implementation: 3"></div><div class="score-bar-segment" style="width: 25.0%; background: #43A047;" title="Correctness: 1"></div></div><div class="score-bar-total">4</div></div><div class="score-bar-row"><div class="score-bar-label">NO_MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 100.0%; background: #E53935;" title="Implementation: 2"></div><div class="score-bar-segment" style="width: 0.0%; background: #FB8C00;" title="Correctness: 0"></div></div><div class="score-bar-total">2</div></div></div></div><div class="requirements-list"><h4><span class="material-icons" style="vertical-align: middle;">checklist</span> Sub-Requirements (4)</h4><div class="requirement-item"><div class="requirement-item-header"><h5>Activity Base Class & Feature Registration</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 1 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 0 | Corr 0 = 0</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Custom Component & System Registration</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Scene Loading from glXF</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 0 | Corr 0 = 0</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 0 | Corr 0 = 0</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Physics Interaction Logic in Systems</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div></div></div><div id="detail-PremiumMediaSample" class="detail-panel" style="display: none;"><div class="detail-header"><h2>PremiumMediaSample</h2><div class="win-prob-chip" style="background: #4CAF50">60.0% Win Probability</div></div><div class="reasoning-box"><h4><span class="material-icons" style="vertical-align: middle;">summarize</span> Analysis</h4><p>MCP wins, though narrowly. Both implementations failed to use the correct Meta Spatial SDK v0.8.0 APIs for key features like MRUK, panel registration, and shaders, often hallucinating entire packages and classes. However, MCP's core architectural choice was better; it correctly identified `AppSystemActivity` as the base class, even with a wrong package, whereas NO_MCP used a completely fictional `SpatialActivity`. Furthermore, MCP's separation of UI and player activities, while not the multi-process architecture required, is a more robust pattern than NO_MCP's single-activity approach. NO_MCP's implementation of features like MRUK and shaders was more complete, but it was built entirely on a foundation of hallucinated APIs, making it fundamentally non-functional. MCP's mistakes are slightly closer to the correct SDK structure, giving it a marginal edge.</p></div><div class="score-breakdown"><h4><span class="material-icons" style="vertical-align: middle;">bar_chart</span> Score Breakdown</h4><div class="score-bars"><div class="score-bar-row"><div class="score-bar-label">MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 44.44444444444444%; background: #1E88E5;" title="Implementation: 4"></div><div class="score-bar-segment" style="width: 55.55555555555556%; background: #43A047;" title="Correctness: 5"></div></div><div class="score-bar-total">9</div></div><div class="score-bar-row"><div class="score-bar-label">NO_MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 75.0%; background: #E53935;" title="Implementation: 6"></div><div class="score-bar-segment" style="width: 25.0%; background: #FB8C00;" title="Correctness: 2"></div></div><div class="score-bar-total">8</div></div></div></div><div class="requirements-list"><h4><span class="material-icons" style="vertical-align: middle;">checklist</span> Sub-Requirements (5)</h4><div class="requirement-item"><div class="requirement-item-header"><h5>Activity Base Class & Feature Registration</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 1 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 0 | Corr 0 = 0</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Panel Registration</h5><span class="winner-chip" style="background: #F44336;">NO_MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 0 | Corr 0 = 0</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>MRUK and Passthrough Integration</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 1 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 2 | Corr 0 = 2</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Custom Shaders and Lighting</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 1 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 2 | Corr 0 = 2</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Video Playback Architecture</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 2 = 3</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 2 = 3</div></div></div></div></div><div id="detail-SpatialVideoSample" class="detail-panel" style="display: none;"><div class="detail-header"><h2>SpatialVideoSample</h2><div class="win-prob-chip" style="background: #4CAF50">70.0% Win Probability</div></div><div class="reasoning-box"><h4><span class="material-icons" style="vertical-align: middle;">summarize</span> Analysis</h4><p>MCP is moderately better than NO_MCP, primarily because its foundational architecture is closer to the reference implementation. MCP correctly identifies the need for `AppSystemActivity` and a custom `ISystem` (`SceneManager`), and it attempts to use concepts like `Panel` and `SpatialAudioSystem`, even though its implementation of them is heavily flawed with hallucinated APIs (e.g., `com.meta.spatial.sdk.*` package, `SpatialSound` component). NO_MCP's foundation is completely incorrect, starting with `AppCompatActivity` and inventing a fictional `com.meta.xr.sdk` that bears no resemblance to the actual Meta Spatial SDK v0.8.0. While both failed to implement key features and relied on fictional APIs, MCP's hallucinations were incorrect applications of real SDK concepts, whereas NO_MCP's were a complete departure from the correct architecture. Therefore, MCP's attempt is a more salvageable starting point.</p></div><div class="score-breakdown"><h4><span class="material-icons" style="vertical-align: middle;">bar_chart</span> Score Breakdown</h4><div class="score-bars"><div class="score-bar-row"><div class="score-bar-label">MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 80.0%; background: #1E88E5;" title="Implementation: 4"></div><div class="score-bar-segment" style="width: 20.0%; background: #43A047;" title="Correctness: 1"></div></div><div class="score-bar-total">5</div></div><div class="score-bar-row"><div class="score-bar-label">NO_MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 100.0%; background: #E53935;" title="Implementation: 2"></div><div class="score-bar-segment" style="width: 0.0%; background: #FB8C00;" title="Correctness: 0"></div></div><div class="score-bar-total">2</div></div></div></div><div class="requirements-list"><h4><span class="material-icons" style="vertical-align: middle;">checklist</span> Sub-Requirements (5)</h4><div class="requirement-item"><div class="requirement-item-header"><h5>Activity Base Class & Feature Registration</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 0 | Corr 0 = 0</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Scene Loading & Environment Setup</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 1 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 0 | Corr 0 = 0</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Video Panel Creation & Registration</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Spatial Audio Integration</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Passthrough (MR) Mode Toggle</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 0 | Corr 0 = 0</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 0 | Corr 0 = 0</div></div></div></div></div><div id="detail-StarterSample" class="detail-panel" style="display: none;"><div class="detail-header"><h2>StarterSample</h2><div class="win-prob-chip" style="background: #4CAF50">70.0% Win Probability</div></div><div class="reasoning-box"><h4><span class="material-icons" style="vertical-align: middle;">summarize</span> Analysis</h4><p>MCP's implementation is significantly better because it correctly identifies the main activity class (`AppSystemActivity`) and the general, albeit incorrect, concepts of interacting with a scene and its entities. Although it hallucinates specific methods, its architectural understanding is closer to the reference. NO_MCP, in contrast, hallucinates the entire SDK architecture, inventing a `Connection` object, multiple non-existent features, and a completely fictional composable-based panel system. MCP's errors are incorrect API calls within a somewhat correct structure, while NO_MCP's errors are a fundamentally wrong architecture from the ground up, making its code unsalvageable.</p></div><div class="score-breakdown"><h4><span class="material-icons" style="vertical-align: middle;">bar_chart</span> Score Breakdown</h4><div class="score-bars"><div class="score-bar-row"><div class="score-bar-label">MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 75.0%; background: #1E88E5;" title="Implementation: 6"></div><div class="score-bar-segment" style="width: 25.0%; background: #43A047;" title="Correctness: 2"></div></div><div class="score-bar-total">8</div></div><div class="score-bar-row"><div class="score-bar-label">NO_MCP</div><div class="score-bar-container"><div class="score-bar-segment" style="width: 100.0%; background: #E53935;" title="Implementation: 5"></div><div class="score-bar-segment" style="width: 0.0%; background: #FB8C00;" title="Correctness: 0"></div></div><div class="score-bar-total">5</div></div></div></div><div class="requirements-list"><h4><span class="material-icons" style="vertical-align: middle;">checklist</span> Sub-Requirements (5)</h4><div class="requirement-item"><div class="requirement-item-header"><h5>Activity Base Class & Feature Registration</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 1 = 2</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Scene and Environment Setup</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>UI Panel Registration</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Welcome Panel UI Implementation</h5><span class="winner-chip" style="background: #4CAF50;">MCP</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 2 | Corr 1 = 3</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div><div class="requirement-item"><div class="requirement-item-header"><h5>Scene Loading from glXF</h5><span class="winner-chip" style="background: #FF9800;">Tie</span></div><div class="requirement-scores"><div class="req-score-col"><strong>MCP:</strong> Impl 1 | Corr 0 = 1</div><div class="req-score-col"><strong>NO_MCP:</strong> Impl 1 | Corr 0 = 1</div></div></div></div></div>
+        </div>
+    </div>
+
+    <script>
+        // Load all visualizations
+        var heatmapData = {"data":[{"colorbar":{"len":0.7,"title":{"text":"Normalized\u003cbr\u003eScore"}},"colorscale":[[0,"#FFEBEE"],[0.25,"#FFF9C4"],[0.5,"#E8F5E9"],[0.75,"#C8E6C9"],[1,"#4CAF50"]],"hovertemplate":"\u003cb\u003e%{y}\u003c\u002fb\u003e\u003cbr\u003e%{x}: %{z:.2f}\u003cextra\u003e\u003c\u002fextra\u003e","showscale":true,"text":{"dtype":"f8","bdata":"AAAAAACAUUAAAAAAAAD0PwAAAAAAAOA\u002fAAAAAAAA6D8AAAAAAADgPwAAAAAAgFFAAAAAAAAA+D8AAAAAAADQPwAAAAAAAPA\u002fAAAAAAAAAAAAAAAAAABOQAAAAAAAAPA\u002fmpmZmZmZ2T+amZmZmZnpP5qZmZmZmdk\u002fAAAAAABAVUBmZmZmZmb2P5qZmZmZmek\u002fZmZmZmZm9j8zMzMzMzPjPwAAAAAAAE5AAAAAAAAA\u002fD8AAAAAAADQPwAAAAAAAPw\u002fAAAAAAAAAAAAAAAAAIBWQAAAAAAAAABAAAAAAAAAAACamZmZmZnZPwAAAAAAAAAAAAAAAAAATkAAAAAAAADwPwAAAAAAANA\u002fAAAAAAAA8D8AAAAAAAAAAAAAAAAAAD5AmpmZmZmZ6T+amZmZmZnJPzMzMzMzM\u002fM\u002fmpmZmZmZ2T8AAAAAAIBRQAAAAAAAAOg\u002fAAAAAAAA0D8AAAAAAADgPwAAAAAAAAAAAAAAAAAATkCamZmZmZnpPwAAAAAAAPA\u002fMzMzMzMz8z+amZmZmZnZPwAAAAAAgFFAmpmZmZmZ6T+amZmZmZnJP5qZmZmZmdk\u002fAAAAAAAAAAAAAAAAAIBRQDMzMzMzM\u002fM\u002fmpmZmZmZ2T8AAAAAAADwPwAAAAAAAAAA","shape":"12, 5"},"textfont":{"size":12},"texttemplate":"%{text:.2f}","x":["Win Prob","MCP Impl","MCP Corr","NO_MCP Impl","NO_MCP Corr"],"y":["AnimationsSample","CustomComponentsSample","HybridSample","MediaPlayerSample","MixedRealitySample","MrukSample","Object3DSample","Object3DSampleIsdk","PhysicsSample","PremiumMediaSample","SpatialVideoSample","StarterSample"],"z":{"dtype":"f8","bdata":"VVVVVVVV5T+amZmZmZnZPwAAAAAAAOA\u002fewntJbSX0D+rqqqqqqrqP1VVVVVVVeU\u002fMzMzMzMz4z8AAAAAAADQPxzHcRzHcdw\u002fAAAAAAAAAAAAAAAAAADgP5qZmZmZmck\u002fmpmZmZmZ2T9oL6G9hPbSP1ZVVVVVVeU\u002fVVVVVVVV7T+jcD0K16PgP5qZmZmZmek\u002fQXsJ7SW05z8AAAAAAADwPwAAAAAAAOA\u002fmpmZmZmZ6T8AAAAAAADQPwAAAAAAAPA\u002fAAAAAAAAAAAAAAAAAADwPwAAAAAAAPA\u002fAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4D+amZmZmZnJPwAAAAAAANA\u002fHMdxHMdx3D8AAAAAAAAAAAAAAAAAAAAAgBSuR+F6pD+amZmZmZnJP2gvob2E9uI\u002fVlVVVVVV5T9VVVVVVVXlPwAAAAAAAAAAAAAAAAAA0D9nL6G9hPayPwAAAAAAAAAAAAAAAAAA4D+AFK5H4XqkPwAAAAAAAPA\u002faC+hvYT24j9WVVVVVVXlP1VVVVVVVeU\u002fgBSuR+F6pD+amZmZmZnJPwAAAAAAAAAAAAAAAAAAAABVVVVVVVXlPwrXo3A9Ctc\u002fmpmZmZmZ2T8cx3Ecx3HcPwAAAAAAAAAA","shape":"12, 5"},"type":"heatmap"}],"layout":{"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"title":{"font":{"size":20},"text":"\u003cb\u003eScore Matrix - All Metrics at a Glance\u003c\u002fb\u003e"},"xaxis":{"title":{"text":""},"side":"top"},"yaxis":{"title":{"text":""},"autorange":"reversed"},"font":{"family":"Roboto, sans-serif"},"margin":{"l":200,"r":100,"t":100,"b":50},"height":600,"paper_bgcolor":"white","plot_bgcolor":"white"}};
+        Plotly.newPlot('heatmap', heatmapData.data, heatmapData.layout, {displayModeBar: true});
+
+        var groupedBarData = {"data":[{"marker":{"color":"#1E88E5"},"name":"MCP Implementation","text":{"dtype":"f8","bdata":"AAAAAAAA9D8AAAAAAAD4PwAAAAAAAPA\u002fZmZmZmZm9j8AAAAAAAD8PwAAAAAAAABAAAAAAAAA8D+amZmZmZnpPwAAAAAAAOg\u002fmpmZmZmZ6T+amZmZmZnpPzMzMzMzM\u002fM\u002f"},"textfont":{"size":10},"textposition":"auto","x":["AnimationsSample","CustomComponentsSample","HybridSample","MediaPlayerSample","MixedRealitySample","MrukSample","Object3DSample","Object3DSampleIsdk","PhysicsSample","PremiumMediaSample","SpatialVideoSample","StarterSample"],"y":{"dtype":"f8","bdata":"AAAAAAAA9D8AAAAAAAD4PwAAAAAAAPA\u002fZmZmZmZm9j8AAAAAAAD8PwAAAAAAAABAAAAAAAAA8D+amZmZmZnpPwAAAAAAAOg\u002fmpmZmZmZ6T+amZmZmZnpPzMzMzMzM\u002fM\u002f"},"type":"bar"},{"marker":{"color":"#43A047"},"name":"MCP Correctness","text":{"dtype":"f8","bdata":"AAAAAAAA4D8AAAAAAADQP5qZmZmZmdk\u002fmpmZmZmZ6T8AAAAAAADQPwAAAAAAAAAAAAAAAAAA0D+amZmZmZnJPwAAAAAAANA\u002fAAAAAAAA8D+amZmZmZnJP5qZmZmZmdk\u002f"},"textfont":{"size":10},"textposition":"auto","x":["AnimationsSample","CustomComponentsSample","HybridSample","MediaPlayerSample","MixedRealitySample","MrukSample","Object3DSample","Object3DSampleIsdk","PhysicsSample","PremiumMediaSample","SpatialVideoSample","StarterSample"],"y":{"dtype":"f8","bdata":"AAAAAAAA4D8AAAAAAADQP5qZmZmZmdk\u002fmpmZmZmZ6T8AAAAAAADQPwAAAAAAAAAAAAAAAAAA0D+amZmZmZnJPwAAAAAAANA\u002fAAAAAAAA8D+amZmZmZnJP5qZmZmZmdk\u002f"},"type":"bar"},{"marker":{"color":"#E53935"},"name":"NO_MCP Implementation","text":{"dtype":"f8","bdata":"AAAAAAAA6D8AAAAAAADwP5qZmZmZmek\u002fZmZmZmZm9j8AAAAAAAD8P5qZmZmZmdk\u002fAAAAAAAA8D8zMzMzMzPzPwAAAAAAAOA\u002fMzMzMzMz8z+amZmZmZnZPwAAAAAAAPA\u002f"},"textfont":{"size":10},"textposition":"auto","x":["AnimationsSample","CustomComponentsSample","HybridSample","MediaPlayerSample","MixedRealitySample","MrukSample","Object3DSample","Object3DSampleIsdk","PhysicsSample","PremiumMediaSample","SpatialVideoSample","StarterSample"],"y":{"dtype":"f8","bdata":"AAAAAAAA6D8AAAAAAADwP5qZmZmZmek\u002fZmZmZmZm9j8AAAAAAAD8P5qZmZmZmdk\u002fAAAAAAAA8D8zMzMzMzPzPwAAAAAAAOA\u002fMzMzMzMz8z+amZmZmZnZPwAAAAAAAPA\u002f"},"type":"bar"},{"marker":{"color":"#FB8C00"},"name":"NO_MCP Correctness","text":{"dtype":"f8","bdata":"AAAAAAAA4D8AAAAAAAAAAJqZmZmZmdk\u002fMzMzMzMz4z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACamZmZmZnZPwAAAAAAAAAAmpmZmZmZ2T8AAAAAAAAAAAAAAAAAAAAA"},"textfont":{"size":10},"textposition":"auto","x":["AnimationsSample","CustomComponentsSample","HybridSample","MediaPlayerSample","MixedRealitySample","MrukSample","Object3DSample","Object3DSampleIsdk","PhysicsSample","PremiumMediaSample","SpatialVideoSample","StarterSample"],"y":{"dtype":"f8","bdata":"AAAAAAAA4D8AAAAAAAAAAJqZmZmZmdk\u002fMzMzMzMz4z8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACamZmZmZnZPwAAAAAAAAAAmpmZmZmZ2T8AAAAAAAAAAAAAAAAAAAAA"},"type":"bar"}],"layout":{"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"title":{"font":{"size":18},"text":"\u003cb\u003eAverage Scores by Sample\u003c\u002fb\u003e"},"font":{"family":"Roboto, sans-serif"},"xaxis":{"title":{"text":"Sample"},"tickangle":45},"yaxis":{"title":{"text":"Average Score"},"range":[0,2]},"legend":{"orientation":"h","yanchor":"bottom","y":1.02,"xanchor":"center","x":0.5},"margin":{"l":80,"r":40,"t":100,"b":120},"barmode":"group","height":500,"paper_bgcolor":"white","plot_bgcolor":"#FAFAFA"}};
+        Plotly.newPlot('grouped-bar-chart', groupedBarData.data, groupedBarData.layout, {displayModeBar: true});
+
+        var scatterData = {"data":[{"hovertemplate":"\u003cb\u003e%{text}\u003c\u002fb\u003e\u003cbr\u003eScore Diff: %{x}\u003cbr\u003eWin Prob: %{y:.1f}%\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":["#4CAF50","#4CAF50","#4CAF50","#4CAF50","#4CAF50","#4CAF50","#4CAF50","#F44336","#4CAF50","#4CAF50","#4CAF50","#4CAF50"],"line":{"color":"white","width":2},"size":15},"mode":"markers+text","text":["AnimationsSample","CustomComponentsSample","HybridSample","MediaPlayerSample","MixedRealitySample","MrukSample","Object3DSample","Object3DSampleIsdk","PhysicsSample","PremiumMediaSample","SpatialVideoSample","StarterSample"],"textfont":{"size":9},"textposition":"top center","x":[2,3,1,1,1,8,1,-3,2,1,3,3],"y":[70.0,70.0,60.0,85.0,60.0,90.0,60.0,30.0,70.0,60.0,70.0,70.0],"type":"scatter"}],"layout":{"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"shapes":[{"line":{"color":"green","dash":"dash"},"opacity":0.3,"type":"line","x0":0,"x1":1,"xref":"x domain","y0":60,"y1":60,"yref":"y"},{"line":{"color":"red","dash":"dash"},"opacity":0.3,"type":"line","x0":0,"x1":1,"xref":"x domain","y0":40,"y1":40,"yref":"y"},{"line":{"color":"gray","dash":"dash"},"opacity":0.5,"type":"line","x0":0,"x1":0,"xref":"x","y0":0,"y1":1,"yref":"y domain"}],"title":{"font":{"size":18},"text":"\u003cb\u003eWin Probability vs Total Score Difference\u003c\u002fb\u003e"},"font":{"family":"Roboto, sans-serif"},"yaxis":{"title":{"text":"MCP Win Probability (%)"},"range":[0,100]},"margin":{"l":80,"r":40,"t":80,"b":80},"xaxis":{"title":{"text":"MCP Total Score - NO_MCP Total Score"}},"height":500,"paper_bgcolor":"white","plot_bgcolor":"#FAFAFA"}};
+        Plotly.newPlot('scatter-chart', scatterData.data, scatterData.layout, {displayModeBar: true});
+
+        var tableData = {"data":[{"cells":{"align":"left","fill":{"color":[["#E8F5E9","#FFF9C4","#E8F5E9","#FFEBEE","#FFF9C4","#FFF9C4","#E8F5E9","#E8F5E9","#FFF9C4","#FFF9C4","#E8F5E9","#FFF9C4","#FFF9C4","#E8F5E9","#FFF9C4","#FFEBEE","#E8F5E9","#FFF9C4","#E8F5E9","#FFF9C4","#FFF9C4","#FFF9C4","#FFF9C4","#E8F5E9","#E8F5E9","#E8F5E9","#E8F5E9","#E8F5E9","#FFF9C4","#FFF9C4","#FFF9C4","#E8F5E9","#FFF9C4","#FFEBEE","#FFF9C4","#FFEBEE","#E8F5E9","#FFF9C4","#FFF9C4","#FFF9C4","#E8F5E9","#FFEBEE","#FFF9C4","#FFF9C4","#FFF9C4","#E8F5E9","#E8F5E9","#FFF9C4","#FFF9C4","#FFF9C4","#E8F5E9","#FFF9C4","#FFF9C4","#E8F5E9","#FFF9C4"]]},"font":{"family":"Roboto, sans-serif","size":11},"height":30,"values":[["AnimationsSample","AnimationsSample","AnimationsSample","AnimationsSample","CustomComponentsSample","CustomComponentsSample","CustomComponentsSample","CustomComponentsSample","HybridSample","HybridSample","HybridSample","HybridSample","HybridSample","MediaPlayerSample","MediaPlayerSample","MediaPlayerSample","MediaPlayerSample","MediaPlayerSample","MixedRealitySample","MixedRealitySample","MixedRealitySample","MixedRealitySample","MrukSample","MrukSample","MrukSample","MrukSample","MrukSample","Object3DSample","Object3DSample","Object3DSample","Object3DSample","Object3DSampleIsdk","Object3DSampleIsdk","Object3DSampleIsdk","Object3DSampleIsdk","Object3DSampleIsdk","PhysicsSample","PhysicsSample","PhysicsSample","PhysicsSample","PremiumMediaSample","PremiumMediaSample","PremiumMediaSample","PremiumMediaSample","PremiumMediaSample","SpatialVideoSample","SpatialVideoSample","SpatialVideoSample","SpatialVideoSample","SpatialVideoSample","StarterSample","StarterSample","StarterSample","StarterSample","StarterSample"],["Activity Setup and Feature Registration","glTF Animation System","Procedural Frame-Based Animation","UI Animation with Android Animator","Custom Component Definition","Custom System Implementation","Activity Integration (Component\u002fSystem Registration)","Base Activity and Feature Registration","Activity Setup: Correctly set up two activities, one for immersive mode inheriting from AppSystemActivity and one for panel mode inheriting from a standard Activity.","Immersive Feature Registration: The immersive activity must correctly register VRFeature and ComposeFeature.","Immersive Scene and Panel Setup: The immersive activity must configure the 3D scene and register the Compose panel.","Panel Activity UI Setup: The panel activity must use setContent to render the shared Jetpack Compose UI.","Mode Switching Implementation: Implement the intent-based logic for switching between panel and immersive modes.","Activity Setup and Feature Registration","Panel Registration and Configuration","Video Playback Integration","Passthrough\u002fMR Mode Toggle","ViewModel-driven State Management","Activity Base Class & Feature Registration","Scene Data & Room Mesh Generation","Basketball Spawning & Physics","Target Placement","Main Menu and Basic App Structure","Anchor Mesh\u002fSurface Anchoring Experience","Keyboard Tracking Experience","QR Code Scanner Experience","Raycast Experience","Activity Base Class & Feature Registration","Scene Loading from glXF","Compose UI Panel Registration","Spawning Objects in the Scene","Activity Base Class and Feature Registration","Scene and 3D Object Loading","ISDK Input Handling","Compose UI Panel Registration","Object Instantiation from UI","Activity Base Class & Feature Registration","Custom Component & System Registration","Scene Loading from glXF","Physics Interaction Logic in Systems","Activity Base Class & Feature Registration","Panel Registration","MRUK and Passthrough Integration","Custom Shaders and Lighting","Video Playback Architecture","Activity Base Class & Feature Registration","Scene Loading & Environment Setup","Video Panel Creation & Registration","Spatial Audio Integration","Passthrough (MR) Mode Toggle","Activity Base Class & Feature Registration","Scene and Environment Setup","UI Panel Registration","Welcome Panel UI Implementation","Scene Loading from glXF"],[1,1,2,1,1,2,2,1,1,0,1,2,1,1,1,1,2,2,1,2,2,2,2,2,2,2,2,1,1,1,1,1,1,0,1,1,1,1,0,1,1,0,1,1,1,1,1,1,1,0,1,1,1,2,1],[1,0,1,0,0,0,0,1,0,0,0,2,0,1,0,0,1,2,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,0,1,0,1,1,2,0,1,0,0,0,1,0,0,1,0],[2,1,3,1,1,2,2,2,1,0,1,4,1,2,1,1,3,4,2,2,2,2,2,2,2,2,2,2,1,1,1,2,1,0,1,1,2,1,0,1,2,0,2,2,3,1,2,1,1,0,2,1,1,3,1],[0,1,1,1,1,2,1,0,1,0,0,2,1,0,1,2,2,2,1,2,2,2,2,0,0,0,0,1,1,1,1,1,1,1,1,2,0,1,0,1,0,1,2,2,1,0,0,1,1,0,1,1,1,1,1],[0,0,1,1,0,0,0,0,0,0,0,2,0,0,0,1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0],[0,1,2,2,1,2,1,0,1,0,0,4,1,0,1,3,2,4,1,2,2,2,2,0,0,0,0,1,1,1,1,1,1,2,1,3,0,1,0,1,0,1,2,2,3,0,0,1,1,0,1,1,1,1,1],["MCP","Tie","MCP","NO_MCP","Tie","Tie","MCP","MCP","Tie","Tie","MCP","Tie","Tie","MCP","Tie","NO_MCP","MCP","Tie","MCP","Tie","Tie","Tie","Tie","MCP","MCP","MCP","MCP","MCP","Tie","Tie","Tie","MCP","Tie","NO_MCP","Tie","NO_MCP","MCP","Tie","Tie","Tie","MCP","NO_MCP","Tie","Tie","Tie","MCP","MCP","Tie","Tie","Tie","MCP","Tie","Tie","MCP","Tie"],["70.0%","70.0%","70.0%","70.0%","70.0%","70.0%","70.0%","70.0%","60.0%","60.0%","60.0%","60.0%","60.0%","85.0%","85.0%","85.0%","85.0%","85.0%","60.0%","60.0%","60.0%","60.0%","90.0%","90.0%","90.0%","90.0%","90.0%","60.0%","60.0%","60.0%","60.0%","30.0%","30.0%","30.0%","30.0%","30.0%","70.0%","70.0%","70.0%","70.0%","60.0%","60.0%","60.0%","60.0%","60.0%","70.0%","70.0%","70.0%","70.0%","70.0%","70.0%","70.0%","70.0%","70.0%","70.0%"]]},"columnwidth":[150,250,80,80,80,80,80,80,80,80],"header":{"align":"left","fill":{"color":"#1976D2"},"font":{"color":"white","family":"Roboto, sans-serif","size":12},"height":40,"values":["\u003cb\u003eSample\u003c\u002fb\u003e","\u003cb\u003eRequirement\u003c\u002fb\u003e","\u003cb\u003eMCP Impl\u003c\u002fb\u003e","\u003cb\u003eMCP Corr\u003c\u002fb\u003e","\u003cb\u003eMCP Total\u003c\u002fb\u003e","\u003cb\u003eNO_MCP Impl\u003c\u002fb\u003e","\u003cb\u003eNO_MCP Corr\u003c\u002fb\u003e","\u003cb\u003eNO_MCP Total\u003c\u002fb\u003e","\u003cb\u003eWinner\u003c\u002fb\u003e","\u003cb\u003eWin Prob\u003c\u002fb\u003e"]},"type":"table"}],"layout":{"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"title":{"font":{"size":18},"text":"\u003cb\u003eAll Requirements Detailed View\u003c\u002fb\u003e"},"margin":{"l":20,"r":20,"t":60,"b":20},"height":800}};
+        Plotly.newPlot('table-chart', tableData.data, tableData.layout, {displayModeBar: false});
+
+        // Tab switching
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+            event.target.closest('.tab').classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Filter functionality
+        function filterData(filter) {
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            event.target.closest('.chip').classList.add('active');
+
+            // Filter logic would go here in a real implementation
+            console.log('Filter applied:', filter);
+        }
+
+        // Heatmap click to show detail
+        document.getElementById('heatmap').on('plotly_click', function(data) {
+            var pointIndex = data.points[0].pointIndex;
+            var samples = ['AnimationsSample', 'CustomComponentsSample', 'HybridSample', 'MediaPlayerSample', 'MixedRealitySample', 'MrukSample', 'Object3DSample', 'Object3DSampleIsdk', 'PhysicsSample', 'PremiumMediaSample', 'SpatialVideoSample', 'StarterSample'];
+            var selectedSample = samples[pointIndex];
+
+            // Hide all detail panels
+            document.querySelectorAll('[id^="detail-"]').forEach(panel => {
+                panel.style.display = 'none';
+            });
+
+            // Show selected detail panel
+            var detailPanel = document.getElementById('detail-' + selectedSample);
+            if (detailPanel) {
+                detailPanel.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

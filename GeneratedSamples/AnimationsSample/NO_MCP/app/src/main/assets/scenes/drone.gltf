@@ -1,0 +1,77 @@
+
+{
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [ 0 ]
+    }
+  ],
+  "nodes": [
+    {
+      "mesh": 0,
+      "rotation": [ 0, 0, 0, 1 ],
+      "scale": [ 1, 1, 1 ]
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 1
+          },
+          "indices": 0
+        }
+      ]
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "data:application/octet-stream;base64,AAABAAIAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAvwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAPA/AAAAAAAAAIA/AAAAAAAAAAPA/AAAAAAAAAACAPwAAAAAAAAAAvwAAAAAAAAAAgD8AAAAAAAAAAPA/AAAAAAAAAACAPwAAAAAAAAAAvwAAAAAAAAAAgD8AAAAAAAAAAPA/AAAAAAAAAACAPwA=",
+      "byteLength": 144
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 144,
+      "target": 34962
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 36,
+      "type": "VEC3",
+      "max": [ 0.5, 0.5, 0.5 ],
+      "min": [ -0.5, -0.5, -0.5 ]
+    }
+  ],
+  "animations": [
+    {
+      "name": "animation_0",
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 0,
+            "path": "rotation"
+          }
+        }
+      ],
+      "samplers": [
+        {
+          "input": 1,
+          "interpolation": "LINEAR",
+          "output": 2
+        }
+      ]
+    }
+  ],
+  "asset": {
+    "version": "2.0"
+  }
+}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <!--
+   In this sample, we don't have any data to extract.
+   In a real application, you would specify which files to extract here.
+    -->
+</data-extraction-rules>

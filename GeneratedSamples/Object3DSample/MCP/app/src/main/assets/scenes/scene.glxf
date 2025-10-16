@@ -1,0 +1,92 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "scenes": [
+    {
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "Root",
+      "children": [
+        1,
+        2
+      ]
+    },
+    {
+      "name": "Environment",
+      "mesh": 0
+    },
+    {
+        "name": "Objects"
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 1
+          },
+          "indices": 0
+        }
+      ]
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "data:application/octet-stream;base64,AAABAAIAAAAAAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAAAAAAAAAAAACAPwAAAAAAAAAIA/AACAPwAAAAAAAAAAAAAIA/AACAPwAIA/AAA=",
+      "byteLength": 144
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 72,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 72,
+      "byteLength": 72,
+      "target": 34962
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5123,
+      "count": 36,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 8,
+      "type": "VEC3"
+    }
+  ],
+  "extensionsUsed": [
+    "META_spatial_scene"
+  ],
+  "extensions": {
+    "META_spatial_scene": {
+      "embedded_gltfs": [
+        {
+          "path": "scenes/cube.gltf"
+        },
+        {
+          "path": "scenes/sphere.gltf"
+        },
+        {
+          "path": "scenes/torus.gltf"
+        }
+      ]
+    }
+  }
+}

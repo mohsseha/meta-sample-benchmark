@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">HybridSample</string>
+    <string name="immersive_mode">Immersive Mode</string>
+    <string name="panel_mode">Panel Mode</string>
+    <string name="switch_to_panel">Switch to Panel</string>
+    <string name="switch_to_immersive">Switch to Immersive</string>
+</resources>

@@ -1,0 +1,103 @@
+
+{
+  "SubRequirements": [
+    {
+      "requirement": "Custom Component Definition",
+      "refEvidence": "REF defines a custom component in XML (`REF/app/src/main/components/LookAt.xml`) which generates a Kotlin class `LookAt`. This is the standard pattern for the SDK version.",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The agent created a Kotlin data class `SharedColorComponent` (`MCP/app/src/main/java/com/metaspatial/customcomponentssample/SharedColorComponent.kt:6`) that inherits from a `Component` interface. However, it did not use the required XML definition file, which is a key part of the component creation process in the SDK."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation uses a completely hallucinated API. It inherits from `com.meta.spatialsdk.components.Component` and uses a manual registration pattern with `ComponentRegistry.register` (`MCP/app/src/main/java/com/metaspatial/customcomponentssample/SharedColorComponent.kt:16`), none of which exist. The correct pattern is defining components in XML as shown in `REF`."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "Similar to MCP, this agent defined a component as a Kotlin data class `SharedDataComponent` (`NO_MCP/app/src/main/java/com/meta/spatial/sdk/sample/customcomponents/SharedDataComponent.kt:7`). It also missed the required XML definition file."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "This implementation is also incorrect. It uses a fictional `@RegisterComponent` annotation and inherits from a hallucinated `com.meta.xr.sdk.component.Component` class (`NO_MCP/app/src/main/java/com/meta/spatial/sdk/sample/customcomponents/SharedDataComponent.kt:6-7`). The correct approach is XML-based component definition."
+        }
+      }
+    },
+    {
+      "requirement": "Custom System Implementation",
+      "refEvidence": "REF implements a `LookAtSystem` that extends `SystemBase` (`REF/app/src/main/java/com/meta/spatial/samples/customcomponentssample/LookAtSystem.kt:16`). It uses `Query.where` to find entities with the `LookAt` and `Transform` components (`LookAtSystem.kt:36`).",
+      "MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "The agent fully implemented a `ColorSystem` class (`MCP/app/src/main/java/com/metaspatial/customcomponentssample/ColorSystem.kt:7`) with `onStart` and `onUpdate` methods, correctly identifying the need for a query to iterate over entities with the custom component."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The API usage is entirely hallucinated. It extends `com.meta.spatialsdk.ecs.System` (`ColorSystem.kt:7`) and uses a fictional `QueryBuilder` (`ColorSystem.kt:11`). The correct base class is `SystemBase` and the query mechanism is `Query.where`, as shown in `REF`."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "The agent fully implemented a `SharedDataSystem` (`NO_MCP/app/src/main/java/com/meta/spatial/sdk/sample/customcomponents/SharedDataSystem.kt:8`) with an `onUpdate` method and a query to process entities, matching the structural requirements."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "This implementation also uses incorrect, hallucinated APIs. It extends `com.meta.xr.sdk.system.System` and uses a fictional `Query` object with a `contains` method (`SharedDataSystem.kt:8, 12`). The correct API is `SystemBase` and `Query.where`."
+        }
+      }
+    },
+    {
+      "requirement": "Activity Integration (Component/System Registration)",
+      "refEvidence": "In `CustomComponentsSampleActivity.kt`, REF registers the component and system with the `componentManager` and `systemManager` respectively within the `onCreate` method (`lines 101-102`).",
+      "MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "The agent correctly identified the need to register the component and system in the `MainActivity`'s `onCreate` method (`MCP/app/src/main/java/com/metaspatial/customcomponentssample/MainActivity.kt:12, 15`). It also attempts to create entities and add the component to them."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The APIs used for registration are incorrect. It calls a static `SharedColorComponent.register()` method that doesn't exist (`MainActivity.kt:12`) and uses a `systemManager` that is available, but the overall context is flawed due to the hallucinated component API. The correct methods are `componentManager.registerComponent` and `systemManager.registerSystem` as seen in REF."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The agent attempted to register the system in `MainActivity.kt` (`line 19`) but did not attempt to register the custom component at all, which is a critical step."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The system registration call `SystemManager.registerSystem(SharedDataSystem::class.java)` (`MainActivity.kt:19`) is a hallucinated API. The correct object is `systemManager` (an instance property, not a static class) and the method is `registerSystem(instance)`."
+        }
+      }
+    },
+    {
+      "requirement": "Base Activity and Feature Registration",
+      "refEvidence": "REF's `CustomComponentsSampleActivity` extends `AppSystemActivity` (`REF/app/src/main/java/com/meta/spatial/samples/customcomponentssample/CustomComponentsSampleActivity.kt:55`) and implements `registerFeatures()` to set up core functionalities like `VRFeature` (`lines 58-75`).",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The agent created a `MainActivity` that extends a base activity (`MCP/app/src/main/java/com/metaspatial/customcomponentssample/MainActivity.kt:8`), but it completely omitted the mandatory `registerFeatures()` method override."
+        },
+        "correctness": {
+          "score": 1,
+          "justification": "The agent correctly identified that the activity should extend `AppSystemActivity` (`MainActivity.kt:8`), although it used a hallucinated package `com.meta.spatialsdk`. The correct package is `com.meta.spatial.toolkit`. This is a partial correctness as the class name is right but the import is wrong."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 0,
+          "justification": "The agent's `MainActivity` (`NO_MCP/app/src/main/java/com/meta/spatial/sdk/sample/customcomponents/MainActivity.kt:13`) does not implement the `registerFeatures()` method, which is a fundamental requirement for an `AppSystemActivity`."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The agent used a hallucinated base class `com.meta.xr.sdk.activity.SpatialActivity` (`MainActivity.kt:13`). The correct base class for this type of application is `AppSystemActivity` from the `com.meta.spatial.toolkit` package, as shown in REF."
+        }
+      }
+    }
+  ],
+  "MCPWinProbability": 0.7,
+  "MCPWinReasoning": "MCP's implementation, while heavily flawed with hallucinated APIs, is structurally closer to the reference implementation. It correctly identifies the need to register both the component and the system in the activity, and it correctly uses the `AppSystemActivity` base class, even if the package is wrong. NO_MCP's submission hallucinates a different, incorrect base activity (`SpatialActivity`) and fails to register the custom component entirely. Although both failed on API correctness, MCP's attempt demonstrates a slightly better understanding of the required application structure and setup process, making it the marginally better starting point."
+}

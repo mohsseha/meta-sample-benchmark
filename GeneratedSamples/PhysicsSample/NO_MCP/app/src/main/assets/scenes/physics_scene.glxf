@@ -1,0 +1,162 @@
+
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "scenes": [
+    {
+      "nodes": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "Floor",
+      "mesh": 0,
+      "extensions": {
+        "META_spatial": {
+          "components": {
+            "PhysicsComponent": {
+              "type": "static",
+              "shape": "box"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DynamicCube",
+      "mesh": 1,
+      "translation": [
+        0,
+        1,
+        -2
+      ],
+      "extensions": {
+        "META_spatial": {
+          "components": {
+            "PhysicsComponent": {
+              "type": "dynamic",
+              "shape": "box",
+              "mass": 1
+            },
+            "Grabbable": {}
+          }
+        }
+      }
+    },
+    {
+      "name": "Button",
+      "mesh": 2,
+      "translation": [
+        -2,
+        1,
+        -2
+      ],
+      "extensions": {
+        "META_spatial": {
+          "components": {
+            "PhysicsComponent": {
+              "type": "kinematic",
+              "shape": "box"
+            },
+            "ButtonComponent": {}
+          }
+        }
+      }
+    },
+    {
+      "name": "Trigger",
+      "mesh": 3,
+      "translation": [
+        2,
+        1,
+        -2
+      ],
+      "extensions": {
+        "META_spatial": {
+          "components": {
+            "PhysicsComponent": {
+              "type": "kinematic",
+              "shape": "box"
+            },
+            "TriggerComponent": {}
+          }
+        }
+      }
+    },
+    {
+      "name": "Spinner",
+      "mesh": 4,
+      "translation": [
+        0,
+        2,
+        -2
+      ],
+      "extensions": {
+        "META_spatial": {
+          "components": {
+            "PhysicsComponent": {
+              "type": "dynamic",
+              "shape": "box",
+              "angular_damping": 0.95
+            },
+            "SpinnerComponent": {}
+          }
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0
+          }
+        }
+      ]
+    },
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 1
+          }
+        }
+      ]
+    },
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 2
+          }
+        }
+      ]
+    },
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 3
+          }
+        }
+      ]
+    },
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 4
+          }
+        }
+      ]
+    }
+  ]
+}

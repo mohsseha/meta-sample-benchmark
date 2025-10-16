@@ -1,0 +1,126 @@
+{
+  "SubRequirements": [
+    {
+      "requirement": "Activity Base Class and Feature Registration",
+      "refEvidence": "REF uses `AppSystemActivity` as the base class (`Object3DSampleIsdkActivity.kt:70`) and registers `VRFeature`, `ComposeFeature`, and `PhysicsFeature` in the `registerFeatures()` method (`Object3DSampleIsdkActivity.kt:93-102`).",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The implementation attempts to create a main activity (`MainActivity.kt:14`), but it inherits from `AppSystemActivity` from the wrong package (`com.meta.spatial.core.AppSystemActivity` instead of `com.meta.spatial.toolkit.AppSystemActivity`). It is also missing the `registerFeatures()` method entirely."
+        },
+        "correctness": {
+          "score": 1,
+          "justification": "The implementation uses `AppSystemActivity` (`MainActivity.kt:14`), which is conceptually correct, but it's from the wrong package. The correct one is in `com.meta.spatial.toolkit`. This is a common mistake when the exact package name is unknown."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The implementation creates a `MainActivity` (`MainActivity.kt:28`) but uses `MetaActivity` as the base class, which is a hallucinated API. It does not implement `registerFeatures()`."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation uses a hallucinated `MetaActivity` class (`MainActivity.kt:28`) from a fictional `com.meta.xr.sdk.compose.activity` package. The correct base class is `AppSystemActivity` from `com.meta.spatial.toolkit`."
+        }
+      }
+    },
+    {
+      "requirement": "Scene and 3D Object Loading",
+      "refEvidence": "REF loads the scene using `glXFManager.inflateGLXF` inside a coroutine (`Object3DSampleIsdkActivity.kt:338-345`). It then gets references to the objects within the scene using `composition.getNodeByName()` (`Object3DSampleIsdkActivity.kt:113-118`).",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The implementation attempts to load a scene using `scene.load(\"scene.glxf\")` (`MainActivity.kt:32-41`). However, this is a simplified and incorrect API. It also tries to set the scene on a custom `Object3DView`, which is not how the SDK works."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation uses a hallucinated `scene.load()` method (`MainActivity.kt:32`). The correct way to load a scene is with `glXFManager.inflateGLXF`. The concept of loading a scene is there, but the API is wrong."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The implementation attempts to load a scene via a `MetaScene` composable (`MainActivity.kt:41-43`), which is a hallucinated API. It passes the scene URI as a parameter, which is conceptually similar to the real implementation, but the API is incorrect."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation uses a completely hallucinated `MetaScene` composable from a fictional `com.meta.xr.sdk.compose.scene` package (`MainActivity.kt:41`). This is a major architectural hallucination."
+        }
+      }
+    },
+    {
+      "requirement": "ISDK Input Handling",
+      "refEvidence": "REF sets up an `IsdkInputListenerSystem` to handle pointer events like `Hover`, `Unhover`, `Select`, and `Unselect` (`Object3DSampleIsdkActivity.kt:130-229`). This is used for hover effects and managing physics state on grab.",
+      "MCP": {
+        "implementation": {
+          "score": 0,
+          "justification": "There is no evidence of any ISDK input handling in the `MCP` implementation. The code only deals with UI button clicks and does not set up any listeners for in-world interactions."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "No ISDK input handling is implemented, so there is nothing to judge for correctness."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The implementation attempts to make objects grabbable by adding a `Grabbable` component in its `ObjectSpawningSystem` (`ObjectSpawningSystem.kt:14`). This shows an understanding that objects need a specific component to be interactive, but it doesn't set up any input listeners."
+        },
+        "correctness": {
+          "score": 1,
+          "justification": "The implementation uses a `Grabbable` component from a hallucinated `com.meta.xr.sdk.isdk` package (`ObjectSpawningSystem.kt:5`). The real `IsdkGrabbable` is in `com.meta.spatial.isdk`. The idea is correct, but the API and package are wrong."
+        }
+      }
+    },
+    {
+      "requirement": "Compose UI Panel Registration",
+      "refEvidence": "REF registers a Compose UI panel using `ComposeViewPanelRegistration` inside the `registerPanels()` method (`Object3DSampleIsdkActivity.kt:309-327`). It provides a panel ID, a `composeViewCreator`, and `UIPanelSettings`.",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The implementation creates a Compose UI using `setContent` in the main activity (`MainActivity.kt:24-29`). This is the standard Android way, but not how you create in-world UI panels with the Meta Spatial SDK. It doesn't use `registerPanels()`."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation uses the standard Android `setContent` method, which is incorrect for creating VR UI panels. It should have used `registerPanels()` with `ComposeViewPanelRegistration`."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The implementation uses a hallucinated `MetaPanel` composable (`MainActivity.kt:44-50`) to create the UI. This shows it understands a special component is needed for VR UI, but it's not the correct API."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation uses a hallucinated `MetaPanel` composable from a fictional `com.meta.xr.sdk.compose.panel` package (`MainActivity.kt:44`). This is another major architectural hallucination."
+        }
+      }
+    },
+    {
+      "requirement": "Object Instantiation from UI",
+      "refEvidence": "REF's `PanelLayout.kt` has a `setUpButton` function (`PanelLayout.kt:220-261`) that creates a new entity with `Mesh`, `Grabbable`, `Physics`, and `Transform` components when a UI button is clicked. This new entity is the instantiated object.",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The implementation has a button `onClick` handler that calls `object3DView.spawnObject(objectName)` (`ObjectSelectionPanel.kt:55`). This indicates an attempt to spawn an object, but the `Object3DView` and its `spawnObject` method are not part of the SDK."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation relies on a hallucinated `Object3DView` class and its `spawnObject` method (`ObjectSelectionPanel.kt:55`). The correct way is to create an `Entity` and add components to it, as shown in the `REF` implementation."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "The implementation has a complete flow for object instantiation. The UI panel's `onObjectSelected` callback triggers `objectSpawningSystem.spawnObject(objectType)` (`MainActivity.kt:48-50`). The `ObjectSpawningSystem` then creates an entity and adds `Transform` and `Grabbable` components (`ObjectSpawningSystem.kt:9-15`)."
+        },
+        "correctness": {
+          "score": 1,
+          "justification": "The implementation uses a hallucinated `getScene().createEntity()` method and `getOrCreateComponent()` (`ObjectSpawningSystem.kt:10-14`). However, the overall structure of creating an entity and adding components is conceptually very close to the correct implementation. The APIs are wrong, but the pattern is right."
+        }
+      }
+    }
+  ],
+  "MCPWinProbability": 0.3,
+  "MCPWinReasoning": "NO_MCP is marginally better. Both implementations have significant correctness issues and hallucinated APIs. However, NO_MCP's implementation of object instantiation (`ObjectSpawningSystem`) is architecturally closer to the reference implementation, even if the specific APIs are wrong. It correctly identifies the pattern of creating an entity and adding components to it. MCP, on the other hand, relies on a completely fictional `Object3DView` class, which is a more fundamental misunderstanding of the SDK's architecture. While NO_MCP has more architectural hallucinations (MetaActivity, MetaScene, MetaPanel), its core logic for the main feature (object spawning) is better structured."
+}

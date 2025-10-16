@@ -1,0 +1,31 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'com.meta.spatial-sdk.gradle-plugin'
+}
+
+android {
+    compileSdkVersion 33
+    defaultConfig {
+        applicationId "com.meta.physicssample"
+        minSdkVersion 29
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0"
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation "com.meta.spatial-sdk:spatial-sdk:0.8.0"
+}

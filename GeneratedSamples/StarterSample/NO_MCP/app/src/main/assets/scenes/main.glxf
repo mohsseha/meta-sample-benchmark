@@ -1,0 +1,54 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [
+        0,
+        1
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "Skybox",
+      "extensions": {
+        "META_environment": {
+          "skybox": {
+            "color": [
+              0.1,
+              0.2,
+              0.3
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "Directional Light",
+      "rotation": [
+        -0.707,
+        0.0,
+        0.0,
+        0.707
+      ],
+      "extensions": {
+        "META_lighting": {
+          "lights": [
+            {
+              "type": "directional",
+              "color": [
+                1.0,
+                1.0,
+                1.0
+              ],
+              "intensity": 1.0
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+
+{
+  "SubRequirements": [
+    {
+      "requirement": "Main Menu and Basic App Structure",
+      "refEvidence": "REF uses a ComponentActivity for the 2D start menu (MrukSampleStartMenuActivity.kt), which launches individual sample activities. The sample activities extend AppSystemActivity (e.g., MrukAnchorMeshSampleActivity.kt:61) and override registerFeatures()",
+      "MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "Fully implemented a main menu with buttons that launch the other implemented activities (MainActivity.kt:33-48). The structure correctly separates the menu from the feature activities."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "Uses a hallucinated package for AppSystemActivity, `com.meta.spatial.sdk.AppSystemActivity` instead of `com.meta.spatial.toolkit.AppSystemActivity` (MainActivity.kt:14). It also hallucinates a `Scene` class and its methods (`:23, :30`), which is not how the SDK is initialized for a simple menu."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "Fully implemented a main menu with buttons to launch the other activities (MainActivity.kt:28-43). It also includes logic to handle permissions before starting an experience."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "Uses a reasonable base class (AppCompatActivity), but it hallucinates a `PermissionManager` class from a fake `com.meta.spatial.sdk.base.permission` package (MainActivity.kt:24, 53). The REF implementation uses Android's standard `requestPermissions` API directly within the sample activity."
+        }
+      }
+    },
+    {
+      "requirement": "Anchor Mesh/Surface Anchoring Experience",
+      "refEvidence": "REF's MrukAnchorMeshSampleActivity.kt extends AppSystemActivity, registers the MRUKFeature (:71-74), requests scene permissions (:201), and uses AnchorMeshSpawner (:108) and AnchorProceduralMesh (:151) to place virtual objects on surfaces identified by MRUKLabels.",
+      "MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "The code attempts to fully implement the feature. It has logic to query for planes and loop through them to place a cube model on each one, showing a clear, complete implementation attempt (SurfaceAnchoringActivity.kt:37-47)."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation is entirely wrong. It hallucinates a `Mruk` class and its `queryPlanes` method (SurfaceAnchoringActivity.kt:12, 38). The correct approach is to use `MRUKFeature` and `AnchorMeshSpawner` with specific `MRUKLabel`s as shown in REF."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 0,
+          "justification": "There is no implementation. The file `AnchorMeshActivity.kt` contains an empty class with an empty onCreate method. No attempt was made to implement the feature."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The class extends a hallucinated `com.meta.spatial.sdk.base.SampleActivity` (AnchorMeshActivity.kt:16). Since no other code is present, no other correctness assessment can be made."
+        }
+      }
+    },
+    {
+      "requirement": "Keyboard Tracking Experience",
+      "refEvidence": "REF's KeyboardTrackerSampleActivity.kt registers the MRUKFeature (:47), requests permissions, and calls `mrukFeature.configureTrackers(setOf(Tracker.Keyboard))` (:140) to start tracking. A separate system (`SpawnKeyboardSystem.kt`) listens for anchor updates.",
+      "MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "The code fully attempts to implement the feature, including starting the tracker, creating a model for the keyboard, updating its position in a callback, and stopping the tracker in onDestroy (ObjectTrackingActivity.kt:38-52)."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation is completely incorrect. It hallucinates the `Mruk` class and invents methods like `startObjectTracking` and `stopObjectTracking` (ObjectTrackingActivity.kt:39, 51). The correct API is `mrukFeature.configureTrackers` with a `Tracker.Keyboard` enum."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 0,
+          "justification": "There is no implementation. The file `KeyboardTrackerActivity.kt` is an empty placeholder with no logic inside the `onCreate` method."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The class extends a hallucinated `com.meta.spatial.sdk.base.SampleActivity` (KeyboardTrackerActivity.kt:16). No other code is present to evaluate."
+        }
+      }
+    },
+    {
+      "requirement": "QR Code Scanner Experience",
+      "refEvidence": "REF's QrCodeScannerSampleActivity.kt registers the MRUKFeature (:47) and calls `mrukFeature.configureTrackers(setOf(Tracker.QrCode))` (:191) to start the scanner. A MenuSpawner system listens for QR code anchors to spawn a panel.",
+      "MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "A full implementation is attempted. The code includes logic to start QR code scanning, create a UI panel with the result, add it to the scene, and stop the scanner on destroy (QrCodeIntegrationActivity.kt:37-57)."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation is based on a fictional API. It hallucinates the `Mruk` class and its `startQrCodeScanning` method (QrCodeIntegrationActivity.kt:38). It also invents a `Panel` class and its methods, where the REF uses a `PanelRegistration` system."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 0,
+          "justification": "There is no implementation. The file `QrCodeScannerActivity.kt` is an empty placeholder with no logic inside the `onCreate` method."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The class extends a hallucinated `com.meta.spatial.sdk.base.SampleActivity` (QrCodeScannerActivity.kt:16). No other code is present to evaluate."
+        }
+      }
+    },
+    {
+      "requirement": "Raycast Experience",
+      "refEvidence": "REF's RaycastSampleActivity.kt registers the MRUKFeature (:56), calls `mrukFeature.startEnvironmentRaycaster()` (:111), and uses a custom system (`UpdateRaycastSystem.kt`) to perform the raycast and place objects.",
+      "MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "The code attempts a full implementation of the raycast feature. It sets up a per-frame loop where it calls a raycast function and places a model at the intersection point (RaycastingActivity.kt:37-50)."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation is entirely hallucinated. It invents a `mruk.raycast(0.5f, 0.5f)` method that uses screen coordinates (RaycastingActivity.kt:40), which is incorrect. The correct API requires a ray with origin and direction. It also hallucinates the `scene.addSystem` method with a lambda."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 0,
+          "justification": "There is no implementation. The file `RaycastActivity.kt` is an empty placeholder with no logic inside the `onCreate` method."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The class extends a hallucinated `com.meta.spatial.sdk.base.SampleActivity` (RaycastActivity.kt:16). No other code is present to evaluate."
+        }
+      }
+    }
+  ],
+  "MCPWinProbability": 0.9,
+  "MCPWinReasoning": "MCP is substantially better because it attempted to implement all required features, providing a complete structural and conceptual scaffold for the application. While its entire implementation is based on a hallucinated version of the SDK, this is still far more useful than NO_MCP's submission, which consists almost entirely of empty placeholder files. NO_MCP failed to implement four of the five requirements, providing no logic whatsoever for the core MRUK features. A developer could theoretically correct MCP's code by replacing the fake API calls, whereas NO_MCP's code provides no starting point for development beyond a file name."
+}

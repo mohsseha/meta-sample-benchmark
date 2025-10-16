@@ -1,0 +1,1 @@
+Examine the TICKET.md file. Implement its requirements incurrent folder. The source TICKET.md file MUST NOT be modified or deleted.

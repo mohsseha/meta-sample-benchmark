@@ -1,0 +1,22 @@
+# IDE files
+.idea/
+.gradle/
+local.properties
+
+# Build files
+build/
+*.apk
+*.aab
+
+# Keystore files
+*.jks
+*.keystore
+
+# Log files
+*.log
+
+# Mac files
+.DS_Store
+
+# Captures
+/captures/

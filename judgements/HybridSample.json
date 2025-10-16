@@ -1,0 +1,127 @@
+
+{
+  "SubRequirements": [
+    {
+      "requirement": "Activity Setup: Correctly set up two activities, one for immersive mode inheriting from AppSystemActivity and one for panel mode inheriting from a standard Activity.",
+      "refEvidence": "REF uses two activities: `HybridSampleActivity.kt` which extends `AppSystemActivity` (line 53) for immersive mode, and `PancakeActivity.kt` which extends `ComponentActivity` (line 43) for panel mode.",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "Attempted a single-activity architecture by having `MainActivity.kt` extend `AppSystemActivity` (line 17) to handle both modes. This is an incomplete implementation as it doesn't follow the two-activity structure and lacks a dedicated panel activity."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation is incorrect. It imports `AppSystemActivity` from a hallucinated package `com.meta.spatial.core` (line 14). The correct package is `com.meta.spatial.toolkit`. It also imports other non-existent classes like `PanelActivity` and `SpatialActivity`."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "Implemented a single `MainActivity.kt` that extends `ComponentActivity` (line 45) to manage both modes. This is an incomplete implementation as it uses the wrong base class for the immersive mode."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation is fundamentally incorrect. It uses hallucinated classes `com.meta.xr.spatial.sdk.SpatialActivity` and `com.meta.xr.spatial.sdk.panel.PanelActivity` (lines 43-44) which do not exist. The correct base class for immersive mode is `AppSystemActivity`."
+        }
+      }
+    },
+    {
+      "requirement": "Immersive Feature Registration: The immersive activity must correctly register VRFeature and ComposeFeature.",
+      "refEvidence": "REF's `HybridSampleActivity.kt` overrides the `registerFeatures()` method (lines 58-69) and adds `VRFeature` and `ComposeFeature` to the list of features.",
+      "MCP": {
+        "implementation": {
+          "score": 0,
+          "justification": "The `MainActivity.kt` file does not contain an implementation of the `registerFeatures()` method. This critical step for initializing VR and Compose capabilities is completely missing."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "As there is no attempt to implement the feature registration, the correctness score is 0. The agent failed to identify this required SDK pattern."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 0,
+          "justification": "The `MainActivity.kt` file does not override the `registerFeatures()` method. The implementation is missing this essential part of the Spatial SDK setup."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "No implementation was attempted, so the correctness score is 0. This indicates a failure to understand the SDK's initialization process."
+        }
+      }
+    },
+    {
+      "requirement": "Immersive Scene and Panel Setup: The immersive activity must configure the 3D scene and register the Compose panel.",
+      "refEvidence": "REF's `HybridSampleActivity.kt` configures the scene in `onSceneReady()` (lines 91-112) with lighting and a skybox, and registers a panel using `registerPanels()` (lines 151-166).",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The agent attempted to create an immersive mode within a `startImmersive()` function (line 48) in `MainActivity.kt`. However, it does not contain any scene setup code or a call to `registerPanels()`."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation relies on a hallucinated `immersive { ... }` block (line 49), which is not a real API in the Spatial SDK. The correct approach is to use `onSceneReady` for scene setup and `registerPanels` for UI, both of which are missing."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 0,
+          "justification": "There is no code for setting up a 3D scene, lighting, environment, or registering a panel in `MainActivity.kt`. The agent completely failed to implement this requirement."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation is incorrect as it relies on the hallucinated `SpatialActivity` to handle the immersive environment, which is not how the SDK works. There is no evidence of using the correct scene management APIs."
+        }
+      }
+    },
+    {
+      "requirement": "Panel Activity UI Setup: The panel activity must use setContent to render the shared Jetpack Compose UI.",
+      "refEvidence": "REF's `PancakeActivity.kt` uses `setContent` inside `onCreate` (line 47) to render the `@Composable HybridPanel`.",
+      "MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "The `startPanel()` function in `MainActivity.kt` (line 35) correctly uses `setContent` to render a Jetpack Compose UI, fulfilling the implementation requirement for the panel part of the hybrid app."
+        },
+        "correctness": {
+          "score": 2,
+          "justification": "The use of `setContent` is the standard and correct way to display a Jetpack Compose UI in an Android Activity, matching the pattern shown in the reference implementation."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "The `onCreate` method in `MainActivity.kt` (line 60) correctly uses `setContent` to render its Jetpack Compose UI, which is the expected implementation for a panel."
+        },
+        "correctness": {
+          "score": 2,
+          "justification": "The implementation correctly uses the `setContent` API, which is the proper way to render a Compose UI within an Activity, as demonstrated in the REF `PancakeActivity`."
+        }
+      }
+    },
+    {
+      "requirement": "Mode Switching Implementation: Implement the intent-based logic for switching between panel and immersive modes.",
+      "refEvidence": "REF uses `startActivity` with an `Intent` to switch from panel to immersive (`PancakeActivity.kt`: lines 51-55) and a `PendingIntent` to switch from immersive to panel (`HybridSampleActivity.kt`: lines 114-140).",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The agent attempted to implement mode switching logic within a single activity using a `ViewModel` state (`MainActivity.kt`: lines 25, 42, 58). This is a valid logical approach, but it does not use the required intent-based system."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The correctness is 0 because the switching logic is tied to the hallucinated `immersive { ... }` block and the incorrect single-activity setup. It does not use the `Intent` mechanism required to switch between separate panel and immersive activity components."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The agent attempted an intent-based switching mechanism by calling `startActivity` (`MainActivity.kt`: lines 54, 66). This shows a partial understanding of the required approach."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation is entirely incorrect as it relies on hallucinated static methods (`SpatialActivity.createIntent` and `PanelActivity.createIntent` on lines 54, 58, 66, 68) that do not exist in the SDK. The fundamental API calls are wrong."
+        }
+      }
+    }
+  ],
+  "MCPWinProbability": 0.6,
+  "MCPWinReasoning": "Both agents failed to produce a correct or functional implementation, with both hallucinating critical APIs. However, the MCP agent's attempt was marginally better. MCP correctly identified that a specialized activity, `AppSystemActivity`, is required for immersive mode, even though it used the wrong package name. This shows a slightly deeper, albeit flawed, understanding of the SDK's architecture. In contrast, the NO_MCP agent used a standard `ComponentActivity` and invented a completely fictional API (`SpatialActivity.createIntent`) to handle immersive mode, which is a more fundamental architectural error. MCP's total score was 7, while NO_MCP's was 6. Given the severity of NO_MCP's architectural hallucinations, MCP has a slightly higher probability of being on a more correct path."
+}

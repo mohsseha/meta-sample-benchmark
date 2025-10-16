@@ -1,0 +1,103 @@
+
+{
+  "SubRequirements": [
+    {
+      "requirement": "Activity Base Class & Feature Registration",
+      "refEvidence": "REF uses `AppSystemActivity` (MixedRealitySampleActivity.kt:65) and registers `VRFeature`, `PhysicsFeature`, and `MRUKFeature` in the `registerFeatures()` method (lines 79-85).",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The implementation creates a `MainActivity` that inherits from `AppSystemActivity` (MainActivity.kt:11), which is a correct base class. However, it completely fails to implement the required `registerFeatures()` method, meaning no SDK features are actually registered or initialized."
+        },
+        "correctness": {
+          "score": 1,
+          "justification": "The code correctly identifies `AppSystemActivity` as the base class but uses a hallucinated package `com.meta.spatial.sdk` (MainActivity.kt:4) instead of the correct `com.meta.spatial.toolkit`. The `systemManager.registerSystem(physicsSystem)` call (line 23) is also incorrect; features must be registered via `registerFeatures()`."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "An activity class is created, but it inherits from `SpatialActivity` (MainActivity.kt:22), which is an incorrect base class for this type of application. It does not attempt to register any features, making the implementation incomplete."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation uses a hallucinated base class `com.meta.xr.sdk.activity.SpatialActivity` (MainActivity.kt:22). The correct base class for toolkit features is `AppSystemActivity` as shown in the REF implementation. The entire approach to initialization and lifecycle (`onEnter`, `onUpdate`) is fundamentally different and incorrect compared to the REF."
+        }
+      }
+    },
+    {
+      "requirement": "Scene Data & Room Mesh Generation",
+      "refEvidence": "REF requests `com.oculus.permission.USE_SCENE` (MixedRealitySampleActivity.kt:140), uses `mrukFeature.loadSceneFromDevice()` to get data (line 155), and configures `AnchorProceduralMesh` to create meshes for walls, floors, etc. (lines 93-104).",
+      "MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "The implementation correctly identifies the need to request scene permissions and generate collision meshes for walls. The `RoomManager` class contains logic to request permission and then iterate through walls to create collision meshes (RoomManager.kt:11-29), which is a complete implementation of the requirement."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The entire MRUK API usage is hallucinated. It calls `MRUK.requestScenePermission` and `MRUK.getSceneData` (RoomManager.kt:14, 19), which are fictional static methods. The correct approach involves using an instance of `MRUKFeature` and its methods like `loadSceneFromDevice()` as shown in REF."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "The implementation attempts the full logic flow: it requests the correct scene permission string (MainActivity.kt:61), calls a method to load the scene (line 71), and then has a `SceneManager` class dedicated to creating meshes for the room surfaces (SceneManager.kt:16-21)."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The API usage is entirely hallucinated. It uses a fictional `PermissionManager` (MainActivity.kt:25), a static `Scene.load` method (line 71), and gets surfaces via `scene.getSurfaces` (SceneManager.kt:17). None of these classes or methods exist in the SDK; it should use `MRUKFeature` and `AnchorProceduralMesh`."
+        }
+      }
+    },
+    {
+      "requirement": "Basketball Spawning & Physics",
+      "refEvidence": "REF loads a 'BasketBall' node from a GLXF composition (MixedRealitySampleActivity.kt:129) and registers a `BallShooter` system (line 132) which handles the spawning and physics logic.",
+      "MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "A complete implementation for spawning and applying physics to a basketball is present in the `GameManager.kt` file. The `shootBasketball` function (lines 41-50) creates an entity, loads a model, adds a rigid body, and sets its velocity, fulfilling the requirement."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The physics implementation is incorrect and relies on hallucinated APIs. It creates a `PhysicsSystem` directly (MainActivity.kt:22) and uses fictional components like `Model`, `Collision`, and `RigidBody` from a generic `com.meta.spatial.sdk` package (GameManager.kt:4, 5, 45-48). The REF uses `PhysicsFeature` and applies physics through entity components within the toolkit's system."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "The implementation fully addresses the requirement. The `PhysicsManager` class has a `createBasketball` method (PhysicsManager.kt:15) that creates an entity and adds physics components. The `MainActivity` handles input and calls this method to shoot the ball, setting its velocity (MainActivity.kt:85-92)."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "This implementation is fundamentally incorrect, inventing an entire `com.meta.xr.sdk.physics` package. It uses hallucinated classes like `PhysicsWorld`, `SpatialEntity`, `PhysicsComponent`, and `CollisionComponent` (PhysicsManager.kt:4, 7-10). The correct approach is to use the `PhysicsFeature` provided by the SDK and interact with its systems as shown in REF."
+        }
+      }
+    },
+    {
+      "requirement": "Target Placement",
+      "refEvidence": "REF loads a scene composition (`Composition.glxf`) which contains pre-placed nodes for all objects, including the target. The target asset (`target.glb`) is listed in the assets directory (`REF/app/src/main/assets/`).",
+      "MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "The implementation includes a `placeTargets` method within `GameManager.kt` (lines 31-39). This method iterates through detected walls and explicitly creates and places a target entity on each one, which is a complete implementation of the requirement."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The method for placing targets is based on the same hallucinated APIs as the rest of the project. It uses the fictional `MRUK.getSceneData().walls` (GameManager.kt:32) to get wall positions and then creates a target with a fictional `Model` component (line 35). The REF loads objects from a pre-built scene file."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "A `TargetManager` class is fully implemented to handle target placement (TargetManager.kt). The `createTargets` method (lines 12-17) gets wall surfaces and calls another method to create and place a target entity on the wall, fulfilling the requirement."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "This implementation is incorrect and relies on the same hallucinated `com.meta.xr.sdk` package. It uses a fictional `scene.getSurfaces` method to find walls (TargetManager.kt:13) and creates a target using a `SpatialEntity` with a `MeshComponent` (lines 20-25), none of which align with the REF's approach of loading from a GLXF scene."
+        }
+      }
+    }
+  ],
+  "MCPWinProbability": 0.6,
+  "MCPWinReasoning": "Both implementations failed significantly in correctness, inventing entire non-existent SDKs (`com.meta.spatial.sdk` for MCP, `com.meta.xr.sdk` for NO_MCP). However, MCP wins slightly because its architectural guess was closer to the ground truth. MCP correctly identified `AppSystemActivity` as the base class and understood the concept of registering systems, even though its API calls were wrong. NO_MCP chose a completely incorrect base class (`SpatialActivity`) and used a different, inaccurate lifecycle model. While both were non-functional, MCP's hallucinations were built on a more accurate foundational structure, making it marginally better."
+}

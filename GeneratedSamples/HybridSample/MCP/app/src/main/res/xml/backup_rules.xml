@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!--
+   In this sample, we don't have any data to backup.
+   In a real application, you would specify which files to backup here.
+    -->
+</full-backup-content>

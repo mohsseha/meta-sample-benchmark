@@ -1,0 +1,127 @@
+
+{
+  "SubRequirements": [
+    {
+      "requirement": "Activity Base Class & Feature Registration",
+      "refEvidence": "REF uses BaseMrukActivity which extends AppSystemActivity (ImmersiveActivity.kt:66) and registers features like ComposeFeature and SpatialAudioFeature via the registerFeatures() method (ImmersiveActivity.kt:78-89).",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The VideoPlayerActivity extends AppSystemActivity (VideoPlayerActivity.kt:9), which is a correct base class. However, it fails to implement the registerFeatures() method, so no Spatial SDK features are registered. This is a partial implementation."
+        },
+        "correctness": {
+          "score": 1,
+          "justification": "The use of AppSystemActivity is correct. However, the package `com.meta.spatial.core.AppSystemActivity` (VideoPlayerActivity.kt:4) is incorrect. The correct package is `com.meta.spatial.toolkit.AppSystemActivity`. The implementation is partially correct due to the correct class name but wrong package."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 0,
+          "justification": "The MediaViewActivity does not implement feature registration at all. There is no registerFeatures() method."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The activity extends SpatialActivity from `com.meta.xr.spatial.sdk.activity.SpatialActivity` (MediaViewActivity.kt:45), which is a hallucinated class and package. The correct base class for this type of application is AppSystemActivity from the toolkit package."
+        }
+      }
+    },
+    {
+      "requirement": "Panel Registration",
+      "refEvidence": "REF registers panels by overriding the registerPanels() method in the main activity (ImmersiveActivity.kt:248-251) and providing a list of PanelRegistration objects.",
+      "MCP": {
+        "implementation": {
+          "score": 0,
+          "justification": "There is no evidence of panel registration in VideoPlayerActivity.kt. The `registerPanels()` method is not implemented."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation is missing, so there is nothing to assess for correctness."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The code attempts to manage panels via a custom PanelManager class (MediaViewActivity.kt:60). It creates a panel when a media item is played (line 111). This is an attempt at implementation, but it does not follow the SDK's declarative registration pattern."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The approach is fundamentally incorrect. It uses a hallucinated `getPanelManager()` method (MediaViewActivity.kt:60) and a custom `PanelManager` to imperatively create panels. The correct pattern is to declaratively register panel types via `registerPanels()`."
+        }
+      }
+    },
+    {
+      "requirement": "MRUK and Passthrough Integration",
+      "refEvidence": "REF extends BaseMrukActivity to handle MRUK setup. It enables passthrough in onSceneReady() via `scene.enablePassthrough(true)` (ImmersiveActivity.kt:150) and registers an AnchorSnappingSystem (ImmersiveActivity.kt:136) for wall interaction.",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The code includes an MRUKManager class (MRUKManager.kt) which suggests an attempt to implement MRUK features. However, this manager is never used in VideoPlayerActivity.kt, and there is no code to enable passthrough."
+        },
+        "correctness": {
+          "score": 1,
+          "justification": "The MRUKManager class attempts to use correct SDK classes like `Scene` and `Anchor` but from a hallucinated package `com.meta.spatial.scene`. It also uses a `Scene.getAnchorsWithLabel` method which is plausible but likely incorrect. The overall approach of a dedicated manager is reasonable, but the API usage is partially correct at best."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "The implementation is quite complete. MediaViewActivity.kt has an MrukManager (line 58), requests scene permission (line 67), and queries for walls (line 70). It also has a UI button to snap the panel to a wall (line 119)."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The entire MRUK implementation is based on hallucinated APIs. It uses `com.meta.xr.spatial.sdk.mruk.MrukAnchor` (line 46) and a custom `MrukManager` that calls non-existent methods like `requestScenePermission` and `queryScene` on a hallucinated `MrukManager` object. There is no call to enable passthrough."
+        }
+      }
+    },
+    {
+      "requirement": "Custom Shaders and Lighting",
+      "refEvidence": "REF registers custom systems for lighting effects (HeroLightingSystem, WallLightingSystem in ImmersiveActivity.kt:132, 141) and sets a scene lighting environment (ImmersiveActivity.kt:151).",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The project includes a ShaderManager.kt class for loading shaders, and shaders are present in the assets directory. However, the shaders are never applied to any panel or entity in VideoPlayerActivity.kt."
+        },
+        "correctness": {
+          "score": 1,
+          "justification": "The ShaderManager.kt uses a hallucinated `Shader.loadFromAssets` method. The concept of a shader manager is correct, but the API call is fictional. The package `com.meta.spatial.graphics` is also hallucinated."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "The implementation is complete. A ShaderManager is created (MediaViewActivity.kt:62), a shader is loaded (line 65), and it is applied to the panel when a video is played (line 113)."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation relies entirely on hallucinated APIs. It uses a fictional `com.meta.xr.spatial.sdk.base.Shader` class (line 52) and a custom `ShaderManager` that interacts with non-existent SDK methods. The approach is conceptually correct but uses no real APIs."
+        }
+      }
+    },
+    {
+      "requirement": "Video Playback Architecture",
+      "refEvidence": "REF uses a multi-process architecture with IPC communication (IPCServiceConnection in ImmersiveActivity.kt:68) to separate the UI/main process from the video playback logic, ensuring performance and stability.",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The app has a dedicated VideoPlayerActivity.kt and a VideoPlayer.kt class that manages ExoPlayer. This separates the video playback logic from the main UI activity (MainActivity.kt). However, it does not use a multi-process architecture with IPC, instead relying on standard Android Intents."
+        },
+        "correctness": {
+          "score": 2,
+          "justification": "The implementation uses standard, correct Android and ExoPlayer APIs for video playback. While it doesn't use the advanced multi-process pattern from REF, the code it has written for single-process navigation and video playback is correct."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The app has a MediaPlayer.kt class that manages an ExoPlayer instance. The playback is handled within the main MediaViewActivity.kt. This is a partial implementation of the playback system but lacks the sophisticated architecture of the reference."
+        },
+        "correctness": {
+          "score": 2,
+          "justification": "The MediaPlayer.kt class uses correct and standard ExoPlayer APIs to handle media playback. The implementation is simple but correct for a basic video player."
+        }
+      }
+    }
+  ],
+  "MCPWinProbability": 0.6,
+  "MCPWinReasoning": "MCP wins, though narrowly. Both implementations failed to use the correct Meta Spatial SDK v0.8.0 APIs for key features like MRUK, panel registration, and shaders, often hallucinating entire packages and classes. However, MCP's core architectural choice was better; it correctly identified `AppSystemActivity` as the base class, even with a wrong package, whereas NO_MCP used a completely fictional `SpatialActivity`. Furthermore, MCP's separation of UI and player activities, while not the multi-process architecture required, is a more robust pattern than NO_MCP's single-activity approach. NO_MCP's implementation of features like MRUK and shaders was more complete, but it was built entirely on a foundation of hallucinated APIs, making it fundamentally non-functional. MCP's mistakes are slightly closer to the correct SDK structure, giving it a marginal edge."
+}

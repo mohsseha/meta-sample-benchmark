@@ -1,0 +1,22 @@
+<scene>
+    <entity>
+        <transform/>
+        <model url="models/button.gltf"/>
+        <physics bounciness="0.5" mass="1.0"/>
+    </entity>
+    <entity>
+        <transform/>
+        <model url="models/spinner.gltf"/>
+        <physics bounciness="0.5" mass="1.0"/>
+    </entity>
+    <entity>
+        <transform/>
+        <model url="models/trigger.gltf"/>
+        <physics bounciness="0.5" mass="1.0"/>
+    </entity>
+    <entity>
+        <transform/>
+        <model url="models/free_object.gltf"/>
+        <physics bounciness="0.5" mass="1.0"/>
+    </entity>
+</scene>

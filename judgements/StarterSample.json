@@ -1,0 +1,126 @@
+{
+  "SubRequirements": [
+    {
+      "requirement": "Activity Base Class & Feature Registration",
+      "refEvidence": "REF uses `AppSystemActivity` as the base class (StarterSampleActivity.kt:55) and registers `VRFeature` and `ComposeFeature` via the `registerFeatures()` method (StarterSampleActivity.kt:58-69).",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The implementation attempts to use `AppSystemActivity` as the base class (MainActivity.kt:12), but it fails to override the `registerFeatures()` method. Instead, it tries to manually get a `PanelSystem` from a `systemManager`, which is not the correct pattern for feature setup."
+        },
+        "correctness": {
+          "score": 1,
+          "justification": "The agent correctly identifies that `AppSystemActivity` should be used, but it imports it from a hallucinated package `com.meta.spatial.core` (MainActivity.kt:4). The correct package is `com.meta.spatial.toolkit`. The overall approach of using a system manager to get features is also incorrect."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The implementation attempts to set up features in `onCreate` (MainActivity.kt:40-52), but it does not use the correct base class or registration method. It uses a standard `ComponentActivity`."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The entire approach is incorrect. It hallucinates a `Connection` object (MainActivity.kt:37) and `requestFeature` methods. It also invents several feature classes like `PanelFeature`, `AssetFeature`, and `EnvironmentFeature` from a non-existent `com.meta.spatial.sdk.features` package (MainActivity.kt:31-34)."
+        }
+      }
+    },
+    {
+      "requirement": "Scene and Environment Setup",
+      "refEvidence": "REF implements `onSceneReady()` to configure the environment. It sets the reference space (line 100), lighting (lines 102-107), IBL environment (line 108), and creates a skybox entity (lines 112-121) in StarterSampleActivity.kt.",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "A `setupEnvironment()` method is present (MainActivity.kt:40-49), showing an attempt to configure the scene. However, the logic inside is incomplete and relies on finding named entities ('Skybox', 'Sun') rather than actively setting up the environment properties."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation relies on a hallucinated `scene.addDefaultEnvironment()` method (MainActivity.kt:48) as a fallback. The correct approach involves using methods like `scene.setLightingEnvironment` and creating an entity for the skybox, which is not done here."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "A `setupScene()` method exists (MainActivity.kt:65-71), indicating an attempt to load a scene. However, it doesn't perform any explicit environment setup like configuring lighting or a skybox."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation uses a hallucinated `AssetFeature` to load the scene and then assigns it to a property on a hallucinated `EnvironmentFeature` (MainActivity.kt:67-70). This entire pattern is incorrect and does not match the SDK's API."
+        }
+      }
+    },
+    {
+      "requirement": "UI Panel Registration",
+      "refEvidence": "REF overrides the `registerPanels()` method (StarterSampleActivity.kt:124) and uses `ComposeViewPanelRegistration` (StarterSampleActivity.kt:126) to define and configure the UI panel.",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The code attempts to create a UI panel in the `spawnWelcomePanel` method (MainActivity.kt:51-65). It creates an entity for the panel and sets its transform, showing an understanding that panels are entities in the scene."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation does not use the correct `registerPanels` pattern. It hallucinates a `panelSystem.spawnPanel()` method (MainActivity.kt:65) to attach the Compose UI to the entity, which is fundamentally incorrect. The correct method is `ComposeViewPanelRegistration`."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The implementation attempts to display a panel by using a `PanelComposition` composable within `setContent` (MainActivity.kt:58-62). This shows an intent to create a UI panel."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The agent hallucinates a `PanelComposition` composable (MainActivity.kt:59) and a `Panel` composable (MainActivity.kt:81) with a `PanelConfig`. These are not real APIs in the Meta Spatial SDK. The correct approach is to register panels through the activity."
+        }
+      }
+    },
+    {
+      "requirement": "Welcome Panel UI Implementation",
+      "refEvidence": "REF defines a `@Composable` function `WelcomePanel` in a separate file (WelcomePanel.kt). It uses `SpatialTheme` and `LocalColorScheme` to support theming (WelcomePanel.kt:32, 37).",
+      "MCP": {
+        "implementation": {
+          "score": 2,
+          "justification": "A `WelcomePanel` composable is fully implemented in its own file (ui/WelcomePanel.kt). It includes a `Column` with two `Text` elements, matching the basic content requirement."
+        },
+        "correctness": {
+          "score": 1,
+          "justification": "The UI is implemented using standard MaterialTheme (WelcomePanel.kt:16) instead of the SDK's `SpatialTheme`. This is partially correct as it's valid Compose code, but it doesn't use the specific theme system provided by the Spatial SDK as shown in the reference."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "A `WelcomePanel` composable is implemented directly inside `MainActivity.kt` (lines 80-95). The implementation is basic, containing just a `Surface` and a `Text` element, which is less detailed than requested."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The entire composable is wrapped in a hallucinated `Panel` composable (MainActivity.kt:81) with a fictional `PanelConfig` object. While the inner `Surface` and `Text` are real, the core component for integrating it into the scene is completely invented."
+        }
+      }
+    },
+    {
+      "requirement": "Scene Loading from glXF",
+      "refEvidence": "REF uses the `glXFManager.inflateGLXF` method within a coroutine to asynchronously load the scene composition from an `apk:///` URI (StarterSampleActivity.kt:140-145).",
+      "MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The code attempts to load a scene in `onCreate` (MainActivity.kt:26). The line `scene.load(\"scenes/main.glxf\")` clearly indicates the intent to load the specified scene file."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "The implementation uses a hallucinated synchronous `scene.load()` method (MainActivity.kt:26). The correct API is `glXFManager.inflateGLXF`, which is asynchronous and requires a coroutine scope."
+        }
+      },
+      "NO_MCP": {
+        "implementation": {
+          "score": 1,
+          "justification": "The code attempts to load the scene inside the `setupScene` method (MainActivity.kt:67). It correctly identifies the path to the scene file."
+        },
+        "correctness": {
+          "score": 0,
+          "justification": "This implementation uses a hallucinated `AssetFeature` and a `loadSceneFromAssets` method with a callback (MainActivity.kt:67). This is an entirely incorrect API and pattern for scene loading."
+        }
+      }
+    }
+  ],
+  "MCPWinProbability": 0.7,
+  "MCPWinReasoning": "MCP's implementation is significantly better because it correctly identifies the main activity class (`AppSystemActivity`) and the general, albeit incorrect, concepts of interacting with a scene and its entities. Although it hallucinates specific methods, its architectural understanding is closer to the reference. NO_MCP, in contrast, hallucinates the entire SDK architecture, inventing a `Connection` object, multiple non-existent features, and a completely fictional composable-based panel system. MCP's errors are incorrect API calls within a somewhat correct structure, while NO_MCP's errors are a fundamentally wrong architecture from the ground up, making its code unsalvageable."
+}

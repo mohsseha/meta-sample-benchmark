@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <!--
+    In this file you can specify which parts of your application's data can be transferred
+    from the device for backup and restore, and for other purposes like debugging.
+    This file is used to configure which files and directories can be extracted.
+    By default, no data can be extracted from the application.
+    You can use this file to allow specific files or directories to be extracted.
+    For more information, see the Android documentation on Data Extraction Rules:
+    https://developer.android.com/guide/topics/data/data-extraction-rules
+    -->
+</data-extraction-rules>
